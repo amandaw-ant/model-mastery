@@ -3,3 +3,6 @@
 # Install Cohere workshop requirements 
 -r cohere/requirements.txt
 -r cohere/lab-1-foundry-maf/requirements.txt
+
+# Install Foundry workshop requirements
+-r "foundry/model router/requirements.txt"

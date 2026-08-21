@@ -78,6 +78,9 @@ target/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+# Generated model evaluation outputs
+model_router_artifacts/
+
 # IPython
 profile_default/
 ipython_config.py
