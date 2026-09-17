@@ -132,7 +132,65 @@ are ready for Module 1.0.
 
 ## When you are done
 
-Delete what you created, for example `az group delete -n <rg>` for the
-resource group holding the Search service (and the eval endpoint, if you
-deployed it). A subscription gets only one Free Search service, so delete it
-if you want to reuse the Free tier elsewhere.
+The simplest option is to delete the resource group and everything in it:
+
+```bash
+az group delete -n <rg> --yes --no-wait
+```
+
+Use this option only when the resource group is dedicated to this workshop.
+
+### Optional cleanup to avoid ongoing charges
+
+Stop local processes such as `uvicorn` with `Ctrl+C`.
+
+Foundry model deployments are charged when they are used, so you can leave
+them in place if you plan to use them again. If you want to stop or remove
+other resources that may continue to incur charges or retain billable
+storage, review the resources you created for the workshop:
+
+| Resource | Optional cleanup |
+|---|---|
+| Azure AI Search | Delete the service or its resource group. A subscription gets only one Free Search service, so delete it if you want to reuse the Free tier elsewhere. |
+| Eval endpoint | Delete its dedicated resource group. This also deletes its Container App, Container Apps environment, and ACR images. |
+| Cupcake Store | Deactivate its active Container App revision between sessions, or delete its resource group when finished. Its storage account and ACR can still incur small charges while retained. |
+| Application Insights | Ingestion and retention can incur charges. Delete only the resource you created for this lab; do not delete one shared by other applications. |
+
+Examples:
+
+```bash
+# Delete the dedicated eval-endpoint resource group.
+az group delete -n <eval-endpoint-rg> --yes --no-wait
+
+# Delete the resource group containing the Search service, if it is dedicated
+# to this lab.
+az group delete -n <search-rg> --yes --no-wait
+
+# Temporarily turn off the Cupcake Store while preserving its FQDN and config.
+REV=$(az containerapp revision list \
+  -g <cupcake-rg> \
+  -n <cupcake-container-app> \
+  --query "[0].name" \
+  -o tsv)
+
+az containerapp revision deactivate \
+  -g <cupcake-rg> \
+  -n <cupcake-container-app> \
+  --revision "$REV"
+```
+
+To turn the Cupcake Store back on:
+
+```bash
+az containerapp revision activate \
+  -g <cupcake-rg> \
+  -n <cupcake-container-app> \
+  --revision "$REV"
+```
+
+Before deleting a resource group, check that it contains only resources made
+for this lab:
+
+```bash
+az resource list -g <resource-group> -o table
+```
