@@ -37,6 +37,9 @@ Three scripts, three roles, two Claude deployments:
 
 Run each on its own first so you see what it produces, then run the loop.
 
+Start from the 'anthropic' folder. If your terminal is still in
+'sparkles-agent' from Lab 1, run 'cd ..' first.
+
 ```
 cd sparkles-loop
 ```

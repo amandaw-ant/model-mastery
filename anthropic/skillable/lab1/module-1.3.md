@@ -29,7 +29,7 @@ KNOWLEDGE_BASE_NAME="cupcake-store-kb"
 ```
 
 A second MCP tool, pointed at the knowledge base's MCP endpoint with the
-Search key in a header. Make the edits marked 👈 1.3 in the box below.
+Search key in a header. Make the edits marked 👈 1.3 in 'agent.py', as in the box below.
 
 ```python-notype
 """Sparkles - The Cupcake ordering agent"""

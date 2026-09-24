@@ -14,7 +14,7 @@ scores four real Sparkles runs.
 ### Setup
 
 ```
-cd sparkles-evals
+cd ../sparkles-evals
 az login
 ```
 
