@@ -107,7 +107,7 @@ Cupcake Store publishes two:
 - **welcome_banner**, a greeting to print at startup
 
 Fetch both, pass the instructions to the 'Agent', and print the banner before
-the chat starts. Make the edits marked 👈 1.2B in the box below.
+the chat starts. Make the edits marked 👈 1.2B in 'agent.py', as in the box below.
 
 ```python-notype
 """Sparkles - The Cupcake ordering agent (completed through Module 1.2)"""

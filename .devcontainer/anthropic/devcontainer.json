@@ -1,0 +1,10 @@
+{
+  // Codespace for the Claude + Microsoft Foundry workshop (anthropic/).
+  "name": "Claude on Microsoft Foundry workshop",
+  "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/azure-cli:1": {}
+  },
+  // Install what the labs need and create anthropic/.env from the template.
+  "postCreateCommand": "cd anthropic && python -m pip install -r requirements.txt -r foundry-iq/requirements.txt && (test -f .env || cp .env.example .env)"
+}

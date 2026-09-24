@@ -14,7 +14,7 @@ Built on earlier work by Henk Boelman and Shilpa Jain — see [THIRD-PARTY-NOTIC
 | | Skillable workshop | On your own |
 | --- | --- | --- |
 | Guide | `skillable/lab1/`, `skillable/lab2/` (one page per module) | `standalone/lab1.md`, `standalone/lab2.md` |
-| Setup | Done for you; your seat's `.env` is pre-filled | [SETUP.md](standalone/SETUP.md), about 30 minutes |
+| Setup | Done for you; your seat's `.env` is pre-filled | [SETUP.md](standalone/SETUP.md), about 30 minutes; a Codespace is optional |
 | Foundry project and knowledge base | The workshop's | Your own |
 | Cupcake Store server | Shared | The shared address, or deploy your own ([cupcake-mcp-setup.md](cupcake-mcp-setup.md), 20 to 30 min) |
 | Eval endpoint (Module 2.4b) | Deployed by instructors | Deploy your own, or skip Step B |

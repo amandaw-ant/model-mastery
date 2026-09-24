@@ -29,7 +29,8 @@ far, plus vision:
    what the customer needs to do (notice period, deposit).
 3. **The receipt** from Module 1.4, for the whole catering order.
 
-The image is sent like this:
+In 'catering.py', the image is sent like this. This is for reading; there is
+nothing to type:
 
 ```python-notype
 {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": data}},

@@ -1,4 +1,4 @@
-# Set up on your own machine
+# Set up on your own
 
 Use this guide if you are taking the labs on your own, not from a Skillable
 workshop seat. In a workshop all of this is done for you and your `.env` is
@@ -12,12 +12,16 @@ Then follow `lab1.md` and `lab2.md` in this folder. Two things to know:
 
 ## What you need
 
-- An Azure subscription where you can create resources, and the
-  [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) signed in (`az login`)
-- Python 3.10 or later
-- VS Code (or any editor) and a terminal
+- An Azure subscription where you can create resources
+- Either Python 3.10 or later, the
+  [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli), and an
+  editor on your own machine, **or** a GitHub account to use a Codespace
 
 ## 1. Get the code
+
+Pick one. The rest of this guide is the same either way.
+
+### On your own machine
 
 ```
 git clone <this repo>
@@ -35,6 +39,17 @@ the other workshops, not this one.
 > Once this workshop lands in
 > [microsoft-foundry/model-mastery](https://github.com/microsoft-foundry/model-mastery),
 > clone that repository instead; the path below it is the same.
+
+### Or in a Codespace
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/amandaw-ant/model-mastery?ref=anthropic-workshop&devcontainer_path=.devcontainer%2Fanthropic%2Fdevcontainer.json)
+
+The packages and `.env` are set up for you. When it opens, run:
+
+```
+cd anthropic
+az login --use-device-code
+```
 
 ## 2. Claude in Foundry
 

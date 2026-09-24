@@ -286,7 +286,7 @@ Cupcake Store publishes two:
 - **welcome_banner**, a greeting to print at startup
 
 Fetch both, pass the instructions to the 'Agent', and print the banner before
-the chat starts. Make the edits marked 👈 1.2B in the box below.
+the chat starts. Make the edits marked 👈 1.2B in 'agent.py', as in the box below.
 
 ```python-notype
 """Sparkles - The Cupcake ordering agent (completed through Module 1.2)"""
@@ -419,7 +419,7 @@ KNOWLEDGE_BASE_NAME="cupcake-store-kb"
 ```
 
 A second MCP tool, pointed at the knowledge base's MCP endpoint with the
-Search key in a header. Make the edits marked 👈 1.3 in the box below.
+Search key in a header. Make the edits marked 👈 1.3 in 'agent.py', as in the box below.
 
 ```python-notype
 """Sparkles - The Cupcake ordering agent"""
@@ -742,7 +742,8 @@ far, plus vision:
    what the customer needs to do (notice period, deposit).
 3. **The receipt** from Module 1.4, for the whole catering order.
 
-The image is sent like this:
+In 'catering.py', the image is sent like this. This is for reading; there is
+nothing to type:
 
 ```python-notype
 {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": data}},

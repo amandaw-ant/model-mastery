@@ -70,6 +70,9 @@ Three scripts, three roles, two Claude deployments:
 
 Run each on its own first so you see what it produces, then run the loop.
 
+Start from the 'anthropic' folder. If your terminal is still in
+'sparkles-agent' from Lab 1, run 'cd ..' first.
+
 ```
 cd sparkles-loop
 ```
@@ -329,8 +332,7 @@ az monitor app-insights component show --query "[0].connectionString" -o tsv
 Foundry project and name it. Replace both values with yours:
 
 ```
-az monitor app-insights component show --app my-appi -g my-rg \
-  --query connectionString -o tsv
+az monitor app-insights component show --app my-appi -g my-rg --query connectionString -o tsv
 ```
 
 **If nothing came back**, create one in the resource group your Foundry project
@@ -339,11 +341,9 @@ is in. Replace both values with yours:
 ```
 az extension add --name application-insights --upgrade
 
-az monitor app-insights component create \
-  --app my-appi -g my-rg -l eastus --application-type web
+az monitor app-insights component create --app my-appi -g my-rg -l eastus --application-type web
 
-az monitor app-insights component show --app my-appi -g my-rg \
-  --query connectionString -o tsv
+az monitor app-insights component show --app my-appi -g my-rg --query connectionString -o tsv
 ```
 
 The connection string is one long line starting 'InstrumentationKey='. That is
@@ -511,9 +511,12 @@ scores four real Sparkles runs.
 ### Setup
 
 ```
-cd sparkles-evals
+cd ../sparkles-evals
 az login
 ```
+
+In a Codespace, use `az login --use-device-code` instead: it prints a code to
+enter at a sign-in page in your own browser.
 
 Check '.env' has 'AZURE_AI_PROJECT_ENDPOINT' and 'EVAL_ENDPOINT_CONNECTION';
 you set both up in [SETUP.md](SETUP.md) step 5.

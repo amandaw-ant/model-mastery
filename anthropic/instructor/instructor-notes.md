@@ -18,6 +18,10 @@ image".
 **Standalone.** Attendees use their own Azure subscription and work through
 SETUP.md themselves. You are not required to prepare anything.
 
+If you offer Codespaces: attendees need a GitHub account, and they sign in
+with `az login --use-device-code`. Some organizations block that; anyone
+blocked does Module 2.4 on their own laptop or watches it on screen.
+
 In practice, prepare some of it anyway as a backup. A shared cupcake MCP server
 and a shared knowledge base cost you little and cover the two things most
 likely to go wrong on someone else's subscription: a deployment that fails, and
@@ -143,6 +147,9 @@ labs point attendees there.
 3. Deploy `eval-endpoint/` (it ships a copy of the store document for the
    judge), create the project connection (`create_connection.py`), and set
    `EVAL_ENDPOINT_CONNECTION` in `.env`.
+   Check it before Module 2.4 (replace `<fqdn>`); you want the model name
+   back. In bash, `curl https://<fqdn>/health`; in PowerShell,
+   `Invoke-RestMethod https://<fqdn>/health`.
 4. Connect Application Insights to the project; put the connection string in
    the image `.env` with `ENABLE_OTEL="0"` (attendees flip it in 2.3).
 5. Verify the supplied catering photo
