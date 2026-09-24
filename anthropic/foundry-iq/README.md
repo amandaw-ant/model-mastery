@@ -46,20 +46,29 @@ RG=my-sparkles-rg          # resource group: any name you like
 SEARCH=my-sparkles-search  # search service: globally unique, lowercase letters, digits, dashes
 ```
 
-Then paste the rest unchanged:
+In PowerShell, the same two lines are:
+
+```
+$RG = "my-sparkles-rg"
+$SEARCH = "my-sparkles-search"
+```
+
+Then paste the rest unchanged. These work in bash and PowerShell alike:
 
 ```
 az group create -n $RG -l eastus
-az search service create -n $SEARCH -g $RG -l eastus --sku free \
-  --auth-options aadOrApiKey --aad-auth-failure-mode http401WithBearerChallenge
+az search service create -n $SEARCH -g $RG -l eastus --sku free --auth-options aadOrApiKey --aad-auth-failure-mode http401WithBearerChallenge
 ```
 
 If your subscription requires an `owner` tag on resource groups, add
-`--tags owner=$USER` to the first command. If the second fails with
+`--tags owner=$USER` to the first command (`--tags owner=$env:USERNAME` in
+PowerShell). If the second fails with
 `InsufficientResourcesAvailable`, the region is out of capacity; try another
 region from the list.
 
 ## 2. Build the knowledge base
+
+From the `anthropic` folder, in bash:
 
 ```
 pip install -r foundry-iq/requirements.txt
@@ -68,7 +77,18 @@ AZURE_SEARCH_ADMIN_KEY="$(az search admin-key show --service-name $SEARCH -g $RG
   python foundry-iq/ingest_foundry_iq.py
 ```
 
-The admin key is passed to this one command and not saved anywhere. (The
+In PowerShell:
+
+```
+pip install -r foundry-iq/requirements.txt
+$env:AZURE_SEARCH_ENDPOINT = "https://$SEARCH.search.windows.net"
+$env:AZURE_SEARCH_ADMIN_KEY = az search admin-key show --service-name $SEARCH -g $RG --query primaryKey -o tsv
+python foundry-iq/ingest_foundry_iq.py
+Remove-Item Env:AZURE_SEARCH_ADMIN_KEY
+```
+
+The admin key is used for this one step and not saved anywhere (the last
+PowerShell line clears it from the window). (The
 script also reads both values from `.env`; with no admin key it signs in
 with `az login`, which needs the Search Service Contributor and Search Index
 Data Contributor roles on the service.)

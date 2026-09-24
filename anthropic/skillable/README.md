@@ -28,7 +28,7 @@ be present and writable:
 Two things make a seat work:
 
 ```
-pip install -r requirements.txt -r foundry-iq/requirements.txt
+pip install -r requirements.txt
 ```
 
 and a filled-in `.env` at the root of the repo, not in `sparkles-agent/`.

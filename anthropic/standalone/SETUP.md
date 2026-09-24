@@ -24,11 +24,13 @@ git clone <this repo>
 cd model-mastery/anthropic
 python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt -r foundry-iq/requirements.txt
+pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Every script reads the `.env` in `anthropic/`.
+Every script reads the `.env` in `anthropic/`. Run everything from the
+`anthropic/` folder: the `requirements.txt` at the top of the repo is for
+the other workshops, not this one.
 
 > Once this workshop lands in
 > [microsoft-foundry/model-mastery](https://github.com/microsoft-foundry/model-mastery),
