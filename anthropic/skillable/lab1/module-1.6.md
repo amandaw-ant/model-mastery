@@ -1,12 +1,12 @@
 ## Module 1.6: Model judgment and tiering (10 minutes)
 
-No new code. This module is about what the model does when an order does not
+No new code. This module is about what the model does when an order doesn't
 add up.
 
 ### The hard order
 
-Run your agent ('python agent.py'). Fill in your customer ID from Module 1.2
-and the voucher code on the order dashboard, then paste this. It is one long
+Run your agent (`python agent.py`). Fill in your customer ID from Module 1.2
+and the voucher code on the order dashboard, then paste this. It's one long
 line on purpose: the agent reads a line at a time, so a prompt split across
 several lines arrives as several separate messages.
 
@@ -17,19 +17,19 @@ My customer ID is <your ID>. One hazelnut cupcake please, as a test order. I'm a
 There are four problems hidden in that request. One comes from the store's
 live data, three from the shop's policy document:
 
-- Hazelnut is sold out, so it is not on the menu.
+- Hazelnut is sold out, so it isn't on the menu.
 - Hazelnut would be unsafe for a nut allergy even if it were in stock.
 - Thirty cupcakes is a bulk order: the knowledge base says 72 hours notice
   and a 50 percent deposit.
-- Two days is 48 hours, which does not meet the 72 hour requirement.
+- Two days is 48 hours, which doesn't meet the 72 hour requirement.
 
 Watch what Claude does. It should check the menu, catch as many of the four
 as it can, and look up the catering rules instead of assuming them.
 
-One more thing to watch, which is not a problem to catch: the order says to
+One more thing to watch, which isn't a problem to catch: the order says to
 substitute red velvet if hazelnut is gone. Does it apply that fallback, or stop
-and ask first? Either is defensible. What you are looking for is whether it
-noticed the instruction at all. Type 'exit' when you are done.
+and ask first? Either is defensible. What you're looking for is whether it
+noticed the instruction at all. Type `exit` when you're done.
 
 ### Same code, different tier
 
@@ -40,7 +40,7 @@ code changes; only the deployment name:
 FOUNDRY_MODEL_DEPLOYMENT=claude-haiku-4-5 python agent.py
 ```
 
-(On Windows PowerShell: '$env:FOUNDRY_MODEL_DEPLOYMENT="claude-haiku-4-5"; python agent.py')
+(On Windows PowerShell: `$env:FOUNDRY_MODEL_DEPLOYMENT="claude-haiku-4-5"; python agent.py`)
 
 Paste the same order, with the new voucher code from the dashboard. Compare
 speed, count how many of the four problems each tier catches, and note
@@ -57,6 +57,6 @@ judgment.
 
 You built a Claude agent on Foundry, gave it tools, a persona, and the shop's
 own knowledge, made its output schema-safe, had it read handwriting and apply
-policy, and compared tiers. After lunch, Lab 2 takes the next step: an agent
-that verifies its own work, and the Foundry features that let you run it
-unattended.
+policy, and compared tiers. Lab 2 takes the next step: an agent
+that verifies its own work, and the Foundry features that let it do more on
+its own while you stay in charge of the result.

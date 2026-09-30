@@ -36,6 +36,8 @@ if which in ("endpoint", "both"):
         "data_mapping": {"query": "{{item.query}}", "response": "{{item.response}}"},
     })
 
+# Foundry's evaluations service is called through the openai library. It only
+# carries the request: no OpenAI model runs. The judge is still Claude.
 evals_client = project_client().get_openai_client()
 
 ev = evals_client.evals.create(

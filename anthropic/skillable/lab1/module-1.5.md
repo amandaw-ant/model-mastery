@@ -2,18 +2,18 @@
 
 A catering order just arrived as a photo of a handwritten note. One item is
 crossed out with a replacement scribbled next to it, quantities are tally
-marks, and there is an allergy note in the margin. Nothing on it is
+marks, and there's an allergy note in the margin. Nothing on it is
 machine-readable. This module shows what Claude does with it.
 
 ### Look at the order
 
-Open 'sparkles-agent/images/catering-order.jpg' in VS Code and read it
-yourself. Note the correction and the allergy note; you will check that
+Open `sparkles-agent/images/catering-order.jpg` in VS Code and read it
+yourself. Note the correction and the allergy note; you'll check that
 Claude honors both.
 
 ### How the script works
 
-Open 'sparkles-agent/catering.py'. It chains everything you have built so
+Open `sparkles-agent/catering.py`. It chains everything you've built so
 far, plus vision:
 
 1. **Vision + structured outputs.** The photo goes to Claude as an image
@@ -24,12 +24,12 @@ far, plus vision:
    takes one cupcake per customer, so a catering order can never be placed in
    full at the counter. The agent looks up the allergen and catering policy
    in the knowledge base, checks the menu, flags anything that conflicts with
-   the allergy note, places **one test order** for the first item that is
+   the allergy note, places **one test order** for the first item that's
    available and safe, and spells out what the catering team must handle and
    what the customer needs to do (notice period, deposit).
 3. **The receipt** from Module 1.4, for the whole catering order.
 
-In 'catering.py', the image is sent like this. This is for reading; there is
+In `catering.py`, the image is sent like this. This is for reading; there's
 nothing to type:
 
 ```python-notype
@@ -48,7 +48,7 @@ python catering.py images/catering-order.jpg
 
 The agent reads the photo, then asks you for what it needs to place the test
 order. Answer it (for example 'My customer ID is ABCD2345, voucher 4KQ7ZP'),
-then type 'done' to print the receipt.
+then type `done` to print the receipt.
 
 Check the output against the photo:
 
