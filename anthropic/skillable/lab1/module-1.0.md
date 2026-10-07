@@ -5,10 +5,13 @@ change how it behaves with a system prompt.
 
 ### Sign in
 
-1. Open [https://ai.azure.com](https://ai.azure.com) and sign in with the
-   workshop account.
-2. If the top bar has a **New Foundry** toggle, turn it on. The workshop
-   project is pre-selected.
+1. Open **Microsoft Edge** from the Windows taskbar.
+2. Go to [https://ai.azure.com](https://ai.azure.com) and sign in with the
+   workshop account. The sign-in details are on the **Resources** tab.
+3. If the top bar has a **New Foundry** toggle, make sure it is turned on.
+4. From the project listings on the main page, select the pre-created
+   project. There should only be one.
+5. If a dialog pops up, select the close or **Skip** button.
 
 ![Foundry home](../images/01-foundry-home.png)
 
@@ -17,7 +20,8 @@ change how it behaves with a system prompt.
 1. In the left navigation choose **Build**, then **Models**.
 2. Open the **Deployments** tab. You will see a Claude Sonnet deployment
    (the name matches 'FOUNDRY_MODEL_DEPLOYMENT' in your '.env') and a Claude
-   Haiku deployment.
+   Haiku deployment. Those are the two this lab uses. Your project may list
+   other Claude models as well.
 
 ![Deployments tab](../images/02-deployments.png)
 

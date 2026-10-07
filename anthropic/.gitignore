@@ -4,4 +4,6 @@ __pycache__/
 *.pyc
 sparkles-loop/workspace/*.html
 sparkles-loop/workspace/*.png
+sparkles-loop/workspace/*.json
+sparkles-hosted/workspace/
 .DS_Store

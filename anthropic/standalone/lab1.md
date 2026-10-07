@@ -17,17 +17,17 @@ By the end of this lab you will have:
 
 **How the lab works.** Every module ends with a checkpoint. Modules 1.4 through
 1.6 are independent, so if you fall behind, skip to the next one. Completed
-code for every module is in 'sparkles-agent/snapshots/'; copy the one you
-need over 'agent.py' and carry on.
+code for every module is in `sparkles-agent/snapshots/`; copy the one you
+need over `agent.py` and carry on.
 
 **Your environment.** VS Code with the repo open, a terminal, and the Foundry
-portal in a browser tab. Your settings live in the '.env' file at the top of
+portal in a browser tab. Your settings live in the `.env` file at the top of
 the repo, which you filled in when you worked through [SETUP.md](SETUP.md).
 
 **Prerequisites**
 
 - The Foundry project you created in [SETUP.md](SETUP.md), with both Claude deployments
-- Python 3.10+ with the packages in 'requirements.txt'
+- Python 3.10+ with the packages in `requirements.txt`
 
 ---
 
@@ -49,7 +49,7 @@ change how it behaves with a system prompt.
 
 1. In the left navigation choose **Build**, then **Models**.
 2. Open the **Deployments** tab. You will see a Claude Sonnet deployment
-   (the name matches 'FOUNDRY_MODEL_DEPLOYMENT' in your '.env') and a Claude
+   (the name matches `FOUNDRY_MODEL_DEPLOYMENT` in your `.env`) and a Claude
    Haiku deployment.
 
 ![Deployments tab](images/02-deployments.png)
@@ -71,7 +71,7 @@ Then, in the chat box, ask: 'It is my daughter's birthday and she is eight.
 What should I order?'
 
 One sentence, and you have a shop assistant without having specified examples or formatting rules. 
-In the code you write next, the same field is called 'instructions'.
+In the code you write next, the same field is called `instructions`.
 
 ### Find the edge
 
@@ -115,11 +115,11 @@ and does not know about your shop.
 ## Module 1.1: Hello world agent (10 minutes)
 
 Time to build the agent in Python. The framework you will use wraps a chat
-model, a conversation session, and tools into one 'Agent' object.
+model, a conversation session, and tools into one `Agent` object.
 
 ### Check your settings
 
-Open the '.env' file at the top of the repo in VS Code. It needs three
+Open the `.env` file at the top of the repo in VS Code. It needs three
 values, all from the Playground's **Details** tab:
 
 ```
@@ -129,18 +129,18 @@ FOUNDRY_MODEL_DEPLOYMENT="claude-sonnet-5"
 ```
 
 You filled these in during [SETUP.md](SETUP.md) step 2. One thing to watch: the portal
-shows the endpoint ending in '/v1/messages', but the value here must stop at
-'/anthropic'. The client appends '/v1/messages' itself when it calls the API,
-so leaving it on asks for '/anthropic/v1/messages/v1/messages', which 404s.
+shows the endpoint ending in `/v1/messages`, but the value here must stop at
+`/anthropic`. The client appends `/v1/messages` itself when it calls the API,
+so leaving it on asks for `/anthropic/v1/messages/v1/messages`, which 404s.
 
 ![Deployment details: Endpoint and Key](images/04-details-endpoint-key.png)
 
-> Treat the key like a password. '.env' is in '.gitignore' so it never gets
+> Treat the key like a password. `.env` is in `.gitignore` so it never gets
 > committed.
 
 ### Read the starting agent
 
-Open 'sparkles-agent/agent.py'. It does four things:
+Open `sparkles-agent/agent.py`. It does four things:
 
 ```python-notype
 # 2. The chat model: Claude on Microsoft Foundry
@@ -157,7 +157,7 @@ agent = Agent(client=chat_client, name="cupcake-agent")
 session = agent.create_session()
 ```
 
-Then a loop reads what you type, calls 'agent.run(...)', and prints the reply.
+Then a loop reads what you type, calls `agent.run(...)`, and prints the reply.
 
 ### Run it
 
@@ -168,11 +168,11 @@ cd sparkles-agent
 python agent.py
 ```
 
-Type 'Hello!' and you should get a friendly reply. Type 'exit' to stop.
+Type `Hello!` and you should get a friendly reply. Type `exit` to stop.
 
 **Checkpoint 2.** A terminal conversation with your own agent.
 
-If it fails: a '401' means the key or endpoint is wrong; 'DeploymentNotFound'
+If it fails: a `401` means the key or endpoint is wrong; `DeploymentNotFound`
 means the deployment name does not match the portal exactly.
 
 ---
@@ -190,8 +190,8 @@ Both come from the Cupcake Store **MCP server**.
 
 ### Step A: give it tools
 
-Two changes to 'agent.py': import 'MCPStreamableHTTPTool', point it at the
-server and connect, then pass it to the 'Agent' via 'tools='. Make the edits
+Two changes to `agent.py`: import `MCPStreamableHTTPTool`, point it at the
+server and connect, then pass it to the `Agent` via `tools=`. Make the edits
 marked 👈 1.2A in the box below.
 
 ```python-notype
@@ -202,7 +202,7 @@ import os
 
 from dotenv import load_dotenv
 
-from agent_framework import Agent, MCPStreamableHTTPTool          # 👈 1.2A
+from agent_framework import Agent, MCPStreamableHTTPTool  # 👈 1.2A
 from agent_framework.foundry import AnthropicFoundryClient
 
 # 1. Load settings from .env
@@ -223,7 +223,7 @@ async def main() -> None:
         base_url=os.environ["FOUNDRY_ENDPOINT"],
     )
 
-    # 3. Connect to the Cupcake Store MCP server                    👈 1.2A
+    # 3. Connect to the Cupcake Store MCP server  👈 1.2A
     mcp_tool = MCPStreamableHTTPTool(
         name="cupcake-store",
         url=os.environ["CUPCAKE_MCP_URL"],
@@ -234,7 +234,7 @@ async def main() -> None:
     agent = Agent(
         client=chat_client,
         name="cupcake-agent",
-        tools=mcp_tool,                                            # 👈 1.2A
+        tools=mcp_tool,  # 👈 1.2A
     )
 
     # 5. A session keeps the conversation history
@@ -250,7 +250,7 @@ async def main() -> None:
         response = await agent.run(user_input, session=session)
         print(f"\n\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
 
-    await mcp_tool.close()                                         # 👈 1.2A
+    await mcp_tool.close()  # 👈 1.2A
 
 
 if __name__ == "__main__":
@@ -270,7 +270,7 @@ the store's tools, and answers from live stock.
 
 **Do not order a cupcake yet.** This step is only to prove the tools work.
 Notice the voice: it has the shop's tools, but it still sounds like a generic
-assistant. Type 'exit' when you are done.
+assistant. Type `exit` when you are done.
 
 ### Step B: give it a personality
 
@@ -285,8 +285,8 @@ Cupcake Store publishes two:
 - **agent_instructions**, the persona
 - **welcome_banner**, a greeting to print at startup
 
-Fetch both, pass the instructions to the 'Agent', and print the banner before
-the chat starts. Make the edits marked 👈 1.2B in 'agent.py', as in the box below.
+Fetch both, pass the instructions to the `Agent`, and print the banner before
+the chat starts. Make the edits marked 👈 1.2B in `agent.py`, as in the box below.
 
 ```python-notype
 """Sparkles - The Cupcake ordering agent (completed through Module 1.2)"""
@@ -324,7 +324,7 @@ async def main() -> None:
     )
     await mcp_tool.connect()
 
-    # 4. Persona and welcome banner come from the MCP server        👈 1.2B
+    # 4. Persona and welcome banner come from the MCP server  👈 1.2B
     instructions = await mcp_tool.get_prompt("agent_instructions")
     banner = await mcp_tool.get_prompt("welcome_banner")
 
@@ -332,16 +332,16 @@ async def main() -> None:
     agent = Agent(
         client=chat_client,
         name="cupcake-agent",
-        instructions=instructions,                                 # 👈 1.2B
+        instructions=instructions,  # 👈 1.2B
         tools=mcp_tool,
     )
 
     # 6. A session keeps the conversation history
     session = agent.create_session()
-    print(banner)                                                  # 👈 1.2B
+    print(banner)  # 👈 1.2B
     print("Type 'exit' to quit.\n")
 
-    # Let Sparkles greet the customer first                        👈 1.2B
+    # Let Sparkles greet the customer first  👈 1.2B
     response = await agent.run("hello", session=session)
     print(f"\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
 
@@ -376,10 +376,10 @@ from the server, not from your repo.
 Now order a cupcake. Answer its questions, pick a flavor, and place the order.
 
 > **Write down your customer ID.** Sparkles gives you an eight-character ID
-> like 'ABCD2345' the first time you order. You will need it later.
+> like `ABCD2345` the first time you order. You will need it later.
 
-Watch it arrive on the order dashboard: the address in 'CUPCAKE_MCP_URL' with
-'/dashboard' in place of '/mcp/'. When your order shows **ready**, it is done.
+Watch it arrive on the order dashboard: the address in `CUPCAKE_MCP_URL` with
+`/dashboard` in place of `/mcp/`. When your order shows **ready**, it is done.
 
 ![Order dashboard](images/05-dashboard.png)
 
@@ -410,7 +410,7 @@ module gives the agent that document through **Foundry IQ**.
 
 ### Add the knowledge base
 
-Your '.env' already has three lines for it:
+Your `.env` already has three lines for it:
 
 ```
 AZURE_SEARCH_ENDPOINT="https://<service>.search.windows.net"
@@ -419,7 +419,7 @@ KNOWLEDGE_BASE_NAME="cupcake-store-kb"
 ```
 
 A second MCP tool, pointed at the knowledge base's MCP endpoint with the
-Search key in a header. Make the edits marked 👈 1.3 in 'agent.py', as in the box below.
+Search key in a header. Make the edits marked 👈 1.3 in `agent.py`, as in the box below.
 
 ```python-notype
 """Sparkles - The Cupcake ordering agent"""
@@ -457,7 +457,7 @@ async def main() -> None:
     )
     await mcp_tool.connect()
 
-    # 4. Connect to the shop's knowledge base in Foundry IQ (policies)   👈 1.3
+    # 4. Connect to the shop's knowledge base in Foundry IQ (policies)  👈 1.3
     search_endpoint = os.environ["AZURE_SEARCH_ENDPOINT"].rstrip("/")
     search_key = os.environ["AZURE_SEARCH_QUERY_KEY"]
     kb_name = os.environ.get("KNOWLEDGE_BASE_NAME", "cupcake-store-kb")
@@ -472,7 +472,7 @@ async def main() -> None:
     # 5. Persona and welcome banner come from the MCP server
     instructions = await mcp_tool.get_prompt("agent_instructions")
     banner = await mcp_tool.get_prompt("welcome_banner")
-    instructions += (                                              # 👈 1.3
+    instructions += (  # 👈 1.3
         "\n\nUse the cupcake-store tool for orders, stock, and order status. "
         "Use the cupcake-knowledge-base tool for store policies: hours, "
         "delivery, shipping, returns, allergens, loyalty, and bulk orders. "
@@ -484,7 +484,7 @@ async def main() -> None:
         client=chat_client,
         name="cupcake-agent",
         instructions=instructions,
-        tools=[mcp_tool, knowledge_tool],                           # 👈 1.3
+        tools=[mcp_tool, knowledge_tool],  # 👈 1.3
     )
 
     # 7. A session keeps the conversation history
@@ -504,7 +504,7 @@ async def main() -> None:
         response = await agent.run(user_input, session=session)
         print(f"\n\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
 
-    await knowledge_tool.close()                                    # 👈 1.3
+    await knowledge_tool.close()  # 👈 1.3
     await mcp_tool.close()
 
 
@@ -516,7 +516,7 @@ You can also just replace the file contents with everything in the box.
 
 ### Watch it choose
 
-Run 'python agent.py' and ask, in this order:
+Run `python agent.py` and ask, in this order:
 
 1. 'Do you bake with tree nuts?'
 2. 'What flavors do you have today?'
@@ -547,14 +547,14 @@ response is guaranteed to match it.
 
 ### The schema
 
-Open 'sparkles-agent/receipt.py'. The schema describes a receipt: order id,
+Open `sparkles-agent/receipt.py`. The schema describes a receipt: order id,
 items (flavor and quantity), total in cents, pickup time. Two things to
 notice:
 
-- The call passes the schema in 'output_config':
+- The call passes the schema in `output_config`:
 - The answer is not always the first content block. Claude may return a
-  thinking block first, so 'first_text()' picks the first block of type
-  'text' rather than reaching for 'content[0]'.
+  thinking block first, so `first_text()` picks the first block of type
+  `text` rather than reaching for `content[0]`.
 
 ```python-notype
 r = client.messages.create(
@@ -577,8 +577,8 @@ times; it never drifts.
 
 ### Wire it into the agent
 
-Add a 'receipt' command to 'agent.py'. The agent has to remember its last
-reply, so there are two 'last_reply' assignments: one after the opening
+Add a `receipt` command to `agent.py`. The agent has to remember its last
+reply, so there are two `last_reply` assignments: one after the opening
 greeting and one inside the loop. Make the edits marked 👈 1.4 in the box
 below.
 
@@ -586,7 +586,7 @@ below.
 """Sparkles - The Cupcake ordering agent"""
 
 import asyncio
-import json                                                        # 👈 1.4
+import json  # 👈 1.4
 import os
 
 from dotenv import load_dotenv
@@ -594,7 +594,7 @@ from dotenv import load_dotenv
 from agent_framework import Agent, MCPStreamableHTTPTool
 from agent_framework.foundry import AnthropicFoundryClient
 
-from receipt import make_receipt                                   # 👈 1.4
+from receipt import make_receipt  # 👈 1.4
 
 # 1. Load settings from .env
 load_dotenv()
@@ -654,11 +654,11 @@ async def main() -> None:
     # 7. A session keeps the conversation history
     session = agent.create_session()
     print(banner)
-    print("Type 'exit' to quit, or 'receipt' after ordering.\n")   # 👈 1.4
+    print("Type 'exit' to quit, or 'receipt' after ordering.\n")  # 👈 1.4
 
     response = await agent.run("hello", session=session)
     print(f"\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
-    last_reply = reply(response)                                   # 👈 1.4
+    last_reply = reply(response)  # 👈 1.4
 
     while True:
         user_input = input("\033[1;35mYou:\033[0m\n")
@@ -667,14 +667,14 @@ async def main() -> None:
         if not user_input.strip():
             continue
 
-        if user_input.lower() == "receipt":                        # 👈 1.4
+        if user_input.lower() == "receipt":  # 👈 1.4
             receipt = make_receipt(last_reply)
             print("\n\033[1;32mReceipt (schema-valid):\033[0m")
             print(json.dumps(receipt, indent=2), "\n")
             continue
 
         response = await agent.run(user_input, session=session)
-        last_reply = reply(response)                               # 👈 1.4
+        last_reply = reply(response)  # 👈 1.4
         print(f"\n\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
 
     await knowledge_tool.close()
@@ -687,7 +687,7 @@ if __name__ == "__main__":
 
 You can also just replace the file contents with everything in the box.
 
-Run the agent, place an order, then type 'receipt'.
+Run the agent, place an order, then type `receipt`.
 
 **Checkpoint 5.** A schema-valid receipt from a real order, on every run.
 
@@ -704,7 +704,7 @@ machine-readable. This module shows what Claude does with it.
 
 You are making the note yourself. Write it by hand on paper, photograph it
 slightly askew in normal light, and save it as
-'sparkles-agent/images/catering-order.jpg'.
+`sparkles-agent/images/catering-order.jpg`.
 
 It needs all of these, because the agent is checked on each one:
 
@@ -719,14 +719,14 @@ Read it back yourself before you run anything. You will be checking that
 Claude honors the correction and the allergy note.
 
 > **Short on time?** A note already ships with the repo at
-> 'sparkles-agent/images/catering-order.jpg'. Open it, read it, and carry on
+> `sparkles-agent/images/catering-order.jpg`. Open it, read it, and carry on
 > from the next section. Writing your own is the better version though: you
 > choose what to cross out and what to put in the margin, so you find out what
 > Claude does with your handwriting rather than ours.
 
 ### How the script works
 
-Open 'sparkles-agent/catering.py'. It chains everything you have built so
+Open `sparkles-agent/catering.py`. It chains everything you have built so
 far, plus vision:
 
 1. **Vision + structured outputs.** The photo goes to Claude as an image
@@ -742,7 +742,7 @@ far, plus vision:
    what the customer needs to do (notice period, deposit).
 3. **The receipt** from Module 1.4, for the whole catering order.
 
-In 'catering.py', the image is sent like this. This is for reading; there is
+In `catering.py`, the image is sent like this. This is for reading; there is
 nothing to type:
 
 ```python-notype
@@ -761,7 +761,7 @@ python catering.py images/catering-order.jpg
 
 The agent reads the photo, then asks you for what it needs to place the test
 order. Answer it (for example 'My customer ID is ABCD2345, voucher 4KQ7ZP'),
-then type 'done' to print the receipt.
+then type `done` to print the receipt.
 
 Check the output against the photo:
 
@@ -786,7 +786,7 @@ add up.
 
 ### The hard order
 
-Run your agent ('python agent.py'). Fill in your customer ID from Module 1.2
+Run your agent (`python agent.py`). Fill in your customer ID from Module 1.2
 and the voucher code on the order dashboard, then paste this. It is one long
 line on purpose: the agent reads a line at a time, so a prompt split across
 several lines arrives as several separate messages.
@@ -810,29 +810,52 @@ as it can, and look up the catering rules instead of assuming them.
 One more thing to watch, which is not a problem to catch: the order says to
 substitute red velvet if hazelnut is gone. Does it apply that fallback, or stop
 and ask first? Either is defensible. What you are looking for is whether it
-noticed the instruction at all. Type 'exit' when you are done.
+noticed the instruction at all. Type `exit` when you are done.
 
 ### Same code, different tier
 
-Now run the same order on Claude Haiku, the fast and inexpensive tier. No
-code changes; only the deployment name:
+Now run the same order on Claude Haiku, the fast and inexpensive tier, and
+see how much of it the smaller tier handles. No code changes; only the
+deployment name:
 
 ```
 FOUNDRY_MODEL_DEPLOYMENT=claude-haiku-4-5 python agent.py
 ```
 
-(On Windows PowerShell: '$env:FOUNDRY_MODEL_DEPLOYMENT="claude-haiku-4-5"; python agent.py')
+(On Windows PowerShell:
+`$env:FOUNDRY_MODEL_DEPLOYMENT="claude-haiku-4-5"; python agent.py; Remove-Item Env:FOUNDRY_MODEL_DEPLOYMENT`.
+The last part clears the setting once the agent exits, so later runs go back
+to Sonnet.)
 
-Paste the same order, with the new voucher code from the dashboard. Compare
-speed, count how many of the four problems each tier catches, and note
-whether it consulted the knowledge base for the party question.
+Paste the same order, with the new voucher code from the dashboard. Type
+`exit` when you are done.
 
-> Foundry hosts several Claude tiers behind the same API. Routing simple
-> traffic to Haiku and hard judgment calls to Sonnet is a one-line change,
-> which is exactly what you just did.
+### Compare the two
 
-**Checkpoint 7.** The same code on two tiers with a visible difference in
-judgment.
+Put the two replies side by side and work through these:
+
+1. Which reply felt faster?
+2. How many of the four problems did each tier catch? If one was missed,
+   which?
+3. Does each reply quote the catering rules (72 hours notice, 50 percent
+   deposit)? If it does, it looked them up instead of assuming.
+4. When hazelnut was unavailable, did each tier substitute red velvet or ask
+   first?
+5. Compare with a neighbor who ran the same tier. Did you get the same answer?
+6. Which requests in your own product are like this order, and which are
+   closer to 'What flavors do you have today?'
+
+Do not be surprised if Haiku handles this order as well as Sonnet. That is the
+point of trying it. You built the agent and got it working on the more capable
+tier first. Once it works, check whether a smaller tier holds up on the same
+requests. Where it does, you get the same result faster and for less.
+
+> Foundry hosts several Claude tiers behind the same API. Moving a workload
+> from Sonnet to Haiku, or back, is a one-line change: the deployment name.
+> That is exactly what you just did.
+
+**Checkpoint 7.** The same order run on two Claude tiers, and the two replies
+compared.
 
 ### Wrap up
 

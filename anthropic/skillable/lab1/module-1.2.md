@@ -13,7 +13,8 @@ Both come from the Cupcake Store **MCP server**.
 
 Two changes to 'agent.py': import 'MCPStreamableHTTPTool', point it at the
 server and connect, then pass it to the 'Agent' via 'tools='. Make the edits
-marked 👈 1.2A in the box below.
+marked 👈 1.2A in the box below, or just replace the whole file with everything
+in the box. Each 👈 marker is at the end of the line where a change starts.
 
 ```python-notype
 """Sparkles - The Cupcake ordering agent"""
@@ -23,7 +24,7 @@ import os
 
 from dotenv import load_dotenv
 
-from agent_framework import Agent, MCPStreamableHTTPTool          # 👈 1.2A
+from agent_framework import Agent, MCPStreamableHTTPTool  # 👈 1.2A
 from agent_framework.foundry import AnthropicFoundryClient
 
 # 1. Load settings from .env
@@ -44,7 +45,7 @@ async def main() -> None:
         base_url=os.environ["FOUNDRY_ENDPOINT"],
     )
 
-    # 3. Connect to the Cupcake Store MCP server                    👈 1.2A
+    # 3. Connect to the Cupcake Store MCP server  👈 1.2A
     mcp_tool = MCPStreamableHTTPTool(
         name="cupcake-store",
         url=os.environ["CUPCAKE_MCP_URL"],
@@ -55,7 +56,7 @@ async def main() -> None:
     agent = Agent(
         client=chat_client,
         name="cupcake-agent",
-        tools=mcp_tool,                                            # 👈 1.2A
+        tools=mcp_tool,  # 👈 1.2A
     )
 
     # 5. A session keeps the conversation history
@@ -71,14 +72,12 @@ async def main() -> None:
         response = await agent.run(user_input, session=session)
         print(f"\n\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
 
-    await mcp_tool.close()                                         # 👈 1.2A
+    await mcp_tool.close()  # 👈 1.2A
 
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
-
-You can also just replace the file contents with everything in the box.
 
 Save the file, then run it:
 
@@ -107,7 +106,9 @@ Cupcake Store publishes two:
 - **welcome_banner**, a greeting to print at startup
 
 Fetch both, pass the instructions to the 'Agent', and print the banner before
-the chat starts. Make the edits marked 👈 1.2B in 'agent.py', as in the box below.
+the chat starts. Make the edits marked 👈 1.2B in 'agent.py', as in the box
+below, or just replace the whole file with everything in the box. Each 👈
+marker is at the end of the line where a change starts.
 
 ```python-notype
 """Sparkles - The Cupcake ordering agent (completed through Module 1.2)"""
@@ -145,7 +146,7 @@ async def main() -> None:
     )
     await mcp_tool.connect()
 
-    # 4. Persona and welcome banner come from the MCP server        👈 1.2B
+    # 4. Persona and welcome banner come from the MCP server  👈 1.2B
     instructions = await mcp_tool.get_prompt("agent_instructions")
     banner = await mcp_tool.get_prompt("welcome_banner")
 
@@ -153,16 +154,16 @@ async def main() -> None:
     agent = Agent(
         client=chat_client,
         name="cupcake-agent",
-        instructions=instructions,                                 # 👈 1.2B
+        instructions=instructions,  # 👈 1.2B
         tools=mcp_tool,
     )
 
     # 6. A session keeps the conversation history
     session = agent.create_session()
-    print(banner)                                                  # 👈 1.2B
+    print(banner)  # 👈 1.2B
     print("Type 'exit' to quit.\n")
 
-    # Let Sparkles greet the customer first                        👈 1.2B
+    # Let Sparkles greet the customer first  👈 1.2B
     response = await agent.run("hello", session=session)
     print(f"\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
 
@@ -181,8 +182,6 @@ async def main() -> None:
 if __name__ == "__main__":
     asyncio.run(main())
 ```
-
-You can also just replace the file contents with everything in the box.
 
 ### Run it and order a cupcake
 

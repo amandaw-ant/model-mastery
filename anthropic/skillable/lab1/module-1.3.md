@@ -29,7 +29,9 @@ KNOWLEDGE_BASE_NAME="cupcake-store-kb"
 ```
 
 A second MCP tool, pointed at the knowledge base's MCP endpoint with the
-Search key in a header. Make the edits marked 👈 1.3 in 'agent.py', as in the box below.
+Search key in a header. Make the edits marked 👈 1.3 in 'agent.py', as in the
+box below, or just replace the whole file with everything in the box. Each 👈
+marker is at the end of the line where a change starts.
 
 ```python-notype
 """Sparkles - The Cupcake ordering agent"""
@@ -67,7 +69,7 @@ async def main() -> None:
     )
     await mcp_tool.connect()
 
-    # 4. Connect to the shop's knowledge base in Foundry IQ (policies)   👈 1.3
+    # 4. Connect to the shop's knowledge base in Foundry IQ (policies)  👈 1.3
     search_endpoint = os.environ["AZURE_SEARCH_ENDPOINT"].rstrip("/")
     search_key = os.environ["AZURE_SEARCH_QUERY_KEY"]
     kb_name = os.environ.get("KNOWLEDGE_BASE_NAME", "cupcake-store-kb")
@@ -82,7 +84,7 @@ async def main() -> None:
     # 5. Persona and welcome banner come from the MCP server
     instructions = await mcp_tool.get_prompt("agent_instructions")
     banner = await mcp_tool.get_prompt("welcome_banner")
-    instructions += (                                              # 👈 1.3
+    instructions += (  # 👈 1.3
         "\n\nUse the cupcake-store tool for orders, stock, and order status. "
         "Use the cupcake-knowledge-base tool for store policies: hours, "
         "delivery, shipping, returns, allergens, loyalty, and bulk orders. "
@@ -94,7 +96,7 @@ async def main() -> None:
         client=chat_client,
         name="cupcake-agent",
         instructions=instructions,
-        tools=[mcp_tool, knowledge_tool],                           # 👈 1.3
+        tools=[mcp_tool, knowledge_tool],  # 👈 1.3
     )
 
     # 7. A session keeps the conversation history
@@ -114,15 +116,13 @@ async def main() -> None:
         response = await agent.run(user_input, session=session)
         print(f"\n\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
 
-    await knowledge_tool.close()                                    # 👈 1.3
+    await knowledge_tool.close()  # 👈 1.3
     await mcp_tool.close()
 
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
-
-You can also just replace the file contents with everything in the box.
 
 ### Watch it choose
 
@@ -138,6 +138,10 @@ and 4 go to the knowledge base; question 2 goes to the store.
 Nothing in your code routes them. Claude reads the two tools' descriptions
 and decides per question. Question 4 should turn up the bulk-order rules
 (72 hours notice, 50 percent deposit); remember that for Module 1.6.
+
+To check an answer against the source, open
+'foundry-iq/docs/cupcake-store-info.md' in VS Code. It is the document the
+knowledge base was built from.
 
 **Checkpoint 4.** Your agent answers policy questions from the shop's own
 document, and picks the right server without being told.

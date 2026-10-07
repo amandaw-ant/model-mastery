@@ -1,16 +1,14 @@
 ## Module 2.1: The agent that checks its own work (30 minutes)
 
-**This is the one that matters.** An agent that runs for a minute needs a good
+An agent that runs for a minute needs a good
 prompt. An agent that runs for an hour needs a way to tell whether it is still
-on track, because nobody is watching each step. That is the whole difference
-between a single call and an agent: something has to check the work and decide
+on track, because nobody is watching each step. That is a major difference
+between a short task and a long one: something has to check the work and decide
 whether to go again.
 
-The pattern is always the same shape. Write down what "done" looks like before
-starting. Build. Check the result against that, not against an opinion. Feed
-the failures back and go again, until it passes or you run out of rounds.
-Everything else in this lab — the toolbox, the tracing, the evaluations — hangs
-off this loop.
+The loop has four steps: write down what "done" looks like, build, check the
+result against it, and send back what failed. It repeats until the result
+passes or the rounds run out. The rest of this lab builds on this loop.
 
 ![Three agents, one loop](../images/05.0-loop-visual.png)
 
@@ -20,11 +18,9 @@ to that spec. The evaluator checks the result and answers PASS or FAIL with a
 critique. FAIL sends the critique back to the generator and another round
 starts. PASS ends the loop.
 
-The example in the diagram is building the game 2048, and there the evaluator
-opens the finished page in a browser to check that it actually plays. Yours is
-a cupcake kiosk, and the checking is done by a script that reads the page and
-counts what is on it. Same role, different evidence: nothing in the loop is
-specific to what is being built, which is the point of it.
+The checking is done by a script that reads the page and counts what is on it,
+and the evaluator judges that report. Nothing in the loop is specific to what
+is being built, which is the point of it.
 
 Three scripts, three roles, two Claude deployments:
 
@@ -35,14 +31,19 @@ Three scripts, three roles, two Claude deployments:
 - **evaluator.py**: the spec plus hard evidence in, PASS or FAIL out, with a
   critique. Sonnet, because the work is only ever as good as the judge.
 
-Run each on its own first so you see what it produces, then run the loop.
+In this module you will run each one on its own first, so you see what it
+produces, and then run the whole loop.
 
-Start from the 'anthropic' folder. If your terminal is still in
-'sparkles-agent' from Lab 1, run 'cd ..' first.
+Your terminal is in 'sparkles-agent' from Lab 1. Go up one folder and into
+'sparkles-loop':
 
 ```
-cd sparkles-loop
+cd ../sparkles-loop
 ```
+
+That line works in PowerShell and in bash. If you opened a new terminal
+(**Terminal > New Terminal** in VS Code) and it is in the 'anthropic' folder,
+use 'cd sparkles-loop'.
 
 ### Step A: the planner (5 minutes)
 
@@ -64,9 +65,9 @@ python planner.py
 Read the spec it prints: three or four features, each with an acceptance
 criterion, saved to 'workspace/spec.json'.
 
-Every criterion hangs off a 'data-testid': a label attached to an element so a
-script can find it without caring how the page looks. The spec always covers
-these five:
+Each criterion names a part of the page by its 'data-testid'. That is a label
+in the HTML that lets a script find the part, however the page looks. The spec
+always covers these five:
 
 | 'data-testid' | The element | What has to be true |
 |---|---|---|
@@ -173,25 +174,26 @@ python run_loop.py
 Sprint 1 loads the seeded draft and fails. Sprint 2 hands the critique to the
 generator, which rewrites the page. The evaluator checks again and passes.
 
-**Now look at what it built.** Open 'workspace/index.html' in a browser.
+**Now look at what it built.** Open 'workspace/index.html' in a browser: in
+the VS Code Explorer, open 'sparkles-loop', then 'workspace', right-click
+'index.html', choose **Reveal in File Explorer**, then double-click the file.
 
 ![The finished kiosk page](../images/05.1-kiosk.png)
 
 - A flavor list with every flavor on its own row, instead of the single one
-  the seed had. You may see more than three; the spec sets a floor, not a limit
-- The special of the day, called out under it
+  the seed had. You may see more than three; the spec sets a minimum, not a
+  maximum
+- The special of the day, called out on its own
 - The order counter next to the button, showing 0
 - Click **Place Order** and the count goes to 1
 
 Open 'seeds/kiosk_buggy.html' alongside it to see where it started: one flavor,
 and no counter at all.
 
-**This is a mock, not a working till.** The button adds one to the number on
-screen and does nothing else. There is no order sent anywhere, nothing saved,
-and no connection to the MCP server or the real shop. What the loop has shown
-is that it can build a page to a spec, catch its own mistake, and fix it
-without anyone checking. A real kiosk would be the next job, and it would be
-built the same way: write the spec first, then let the loop work to it.
+**This page is a demo. It does not take real orders.** The button only adds
+one to the number on screen. What matters is what the loop showed: it built a
+page to a spec, caught its own mistake, and fixed it. A real kiosk would be
+built the same way.
 
 > Why this matters. When an agent writes more code than you can review, the
 > review becomes the bottleneck. The fix is not a better prompt for the

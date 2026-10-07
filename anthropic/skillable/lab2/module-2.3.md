@@ -12,12 +12,14 @@ external application that uses Claude on Foundry.
 
 ### Turn tracing on
 
-In '.env', set:
+In '.env', at the top of the repo, change one line:
 
 ```
 ENABLE_OTEL="1"
-APPLICATIONINSIGHTS_CONNECTION_STRING="<from your instructor>"
 ```
+
+'APPLICATIONINSIGHTS_CONNECTION_STRING', on the line below it, is already
+filled in for you. If it is empty, tell your instructor.
 
 That is the only change you make. The scripts already do the rest, in
 'sparkles-loop/common.py' — the shared file all three import for the Claude
@@ -39,18 +41,18 @@ client, the model names, and the tracing.
 python run_loop.py
 ```
 
-The first line of output should be `Tracing on: spans go to Application
-Insights.`
+The first line of output should be
+'Tracing on: spans go to Application Insights.'
 
 The whole run becomes one trace, with the planner first and each round nested
-underneath. The `POST` rows are captured automatically from the HTTP client;
-the rest come from `session_span()`, `run_span()` and `span()` in `common.py`.
+underneath. The 'POST' rows are captured automatically from the HTTP client;
+the rest come from 'session_span()', 'run_span()' and 'span()' in 'common.py'.
+You will open the trace in Step 2. Its spans will be nested like this:
 
 ```
 sparkles-session
   planner          -> POST /anthropic/v1/messages
   sparkles-run (round 1)
-    generator      -> POST /anthropic/v1/messages
     evaluator      -> POST /anthropic/v1/messages
   sparkles-run (round 2)
     generator      -> POST /anthropic/v1/messages
@@ -58,32 +60,37 @@ sparkles-session
 ```
 
 The planner sits outside the rounds because it runs once, before any of them.
+Round 1 has no generator because it starts from the seeded draft.
 
-While the loop runs, take a look at `common.py` and find the `span` class. Note
+While the loop runs, take a look at 'common.py' and find the 'span' class. Note
 the three things it attaches to every agent call: the model, the token counts,
-and anything the loop passes to `sp.set(...)` such as the evaluator's score.
+and anything the loop passes to 'sp.set(...)' such as the evaluator's score.
 
 Traces take 2 to 5 minutes to appear in the portal. Continue to Step 2 once
 the loop has finished and a few minutes have passed.
 
 #### Step 2: Look at the run as a trace
 
-1. In the Application Insights resource, open **Investigate > Search**.
-2. Set the time range to **Last 30 minutes**.
-3. Select **View as traces**. Each `sparkles-session` card is one run of the
+1. In Edge, open [https://portal.azure.com](https://portal.azure.com). If it
+   asks you to sign in, use the same workshop account as in Module 1.0.
+2. In the search bar at the top of the portal, type 'Application Insights',
+   select it, and open the workshop's resource from the list.
+3. In the resource's left menu, open **Investigate > Search**.
+4. Set the time range to **Last 30 minutes**.
+5. Select **View as traces**. Each 'sparkles-session' card is one run of the
    script. Before opening anything, look at the card header: it shows the run's
-   duration, the number of spans, and a token badge (for example `12,400t`) for
-   the whole run. Azure reads the `gen_ai.usage.*` attributes and totals them
+   duration, the number of spans, and a token badge (for example '12,400t') for
+   the whole run. Azure reads the 'gen_ai.usage.*' attributes and totals them
    for you.
-4. Click the header line of the card (the trace ID and `sparkles-session` name,
+6. Click the header line of the card (the trace ID and 'sparkles-session' name,
    not the "Matching Dependency" box underneath). The end-to-end transaction
    page opens as a timeline: the planner at the top, then each round below it,
    with the generator and evaluator inside and the actual Claude call underneath
    each.
-5. In that timeline, click the **evaluator** bar (not the POST beneath it). The
+7. In that timeline, click the **evaluator** bar (not the POST beneath it). The
    panel on the right lists that span's properties: the model,
-   `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens`, and the
-   `sparkles.*` values the loop recorded. If the panel looks short, look for a
+   'gen_ai.usage.input_tokens', 'gen_ai.usage.output_tokens', and the
+   'sparkles.*' values the loop recorded. If the panel looks short, look for a
    "show all" or "leave simple view" link on it.
 
 ![Investigate > Search, cards](../images/06-search-cards.png)
@@ -99,16 +106,15 @@ Questions to answer from this view:
 
 #### Step 3: Query across rounds
 
-1. Open **Monitoring > Logs**. Two settings take you straight to the KQL
-   editor, and both stick for your account:
+1. In the same Application Insights resource, open **Monitoring > Logs** in
+   the left menu. Two settings take you straight to the KQL editor, and both
+   stick for your account:
    - In the **Queries hub** dialog, switch off **Always show Queries hub** and
      close it with the X.
    - Switch off the **Agent** toggle at the top right of the page.
 
-   > Optional, before you switch the Agent off: the **Observability Agent**
-   > writes KQL for you. Ask it "show me evaluator spans with their
-   > sparkles.score by round" and compare what it produces with the queries
-   > below.
+   If the editor opens in **Simple mode** (a dropdown at the top right),
+   switch it to **KQL mode**.
 2. Paste the following into the editor and select **Run**. It gives the cost
    picture per agent and model.
 
@@ -137,14 +143,19 @@ Questions to answer from this view:
    | render timechart
    ```
 
-   `sparkles.score` is the number of acceptance criteria the evaluator passed,
-   and `sparkles.criteria` is how many there were, so a round that fixes one
+   'sparkles.score' is the number of acceptance criteria the evaluator passed,
+   and 'sparkles.criteria' is how many there were, so a round that fixes one
    problem moves from 3 to 4 out of 4. The evaluator sets both in
-   `evaluator.py`, just after it parses the verdict.
+   'evaluator.py', just after it parses the verdict.
 
    A rising line is the evaluator forcing the generator to improve. A flat line
    means the criteria are too easy or the feedback is not reaching the
    generator.
+
+> **Optional.** The **Observability Agent** writes KQL for you. Switch the
+> **Agent** toggle back on, ask it "show me evaluator spans with their
+> sparkles.score by round", and compare what it produces with the queries
+> above.
 
 ![Trace tree and the score chart](../images/08-trace-tree-chart.png)
 

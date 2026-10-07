@@ -20,11 +20,7 @@ By the end of this lab you will have:
 code for every module is in 'sparkles-agent/snapshots/'; copy the one you
 need over 'agent.py' and carry on.
 
-**Your environment.** VS Code with the repo open, a terminal, and the Foundry
-portal in a browser tab. The '.env' file in 'sparkles-agent/' is already
-filled in for your seat unless the instructor says otherwise.
-
-**Prerequisites**
-
-- The workshop Foundry project (sign-in details from your instructor)
-- Python 3.10+ with the packages in 'requirements.txt' (pre-installed)
+**Your environment.** You will use VS Code with the repo open, its terminal,
+and the Foundry portal in a browser tab. The modules tell you when to open
+each one. The '.env' file at the top of the repo is already filled in for you
+unless the instructor says otherwise.

@@ -33,7 +33,7 @@ async def main() -> None:
     )
     await mcp_tool.connect()
 
-    # 4. Connect to the shop's knowledge base in Foundry IQ (policies)   👈 1.3
+    # 4. Connect to the shop's knowledge base in Foundry IQ (policies)  👈 1.3
     search_endpoint = os.environ["AZURE_SEARCH_ENDPOINT"].rstrip("/")
     search_key = os.environ["AZURE_SEARCH_QUERY_KEY"]
     kb_name = os.environ.get("KNOWLEDGE_BASE_NAME", "cupcake-store-kb")
@@ -48,7 +48,7 @@ async def main() -> None:
     # 5. Persona and welcome banner come from the MCP server
     instructions = await mcp_tool.get_prompt("agent_instructions")
     banner = await mcp_tool.get_prompt("welcome_banner")
-    instructions += (                                              # 👈 1.3
+    instructions += (  # 👈 1.3
         "\n\nUse the cupcake-store tool for orders, stock, and order status. "
         "Use the cupcake-knowledge-base tool for store policies: hours, "
         "delivery, shipping, returns, allergens, loyalty, and bulk orders. "
@@ -60,7 +60,7 @@ async def main() -> None:
         client=chat_client,
         name="cupcake-agent",
         instructions=instructions,
-        tools=[mcp_tool, knowledge_tool],                           # 👈 1.3
+        tools=[mcp_tool, knowledge_tool],  # 👈 1.3
     )
 
     # 7. A session keeps the conversation history
@@ -80,7 +80,7 @@ async def main() -> None:
         response = await agent.run(user_input, session=session)
         print(f"\n\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
 
-    await knowledge_tool.close()                                    # 👈 1.3
+    await knowledge_tool.close()  # 👈 1.3
     await mcp_tool.close()
 
 

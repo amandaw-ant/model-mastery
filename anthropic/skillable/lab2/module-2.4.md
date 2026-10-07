@@ -18,6 +18,13 @@ cd ../sparkles-evals
 az login
 ```
 
+'az login' opens a sign-in window, and it can open behind VS Code. If nothing
+seems to happen, make the VS Code window smaller and look for it. Choose
+**Work or school account** and sign in with the same workshop account as in
+Module 1.0. A second window follows, and it can hide behind VS Code too. If
+the terminal then asks you to select a subscription, press Enter to keep the
+default.
+
 Check '.env' has 'AZURE_AI_PROJECT_ENDPOINT' and 'EVAL_ENDPOINT_CONNECTION'
 (your instructor pre-created that connection). Each attendee's evaluators are
 named with your seat, so you will not collide with your neighbor.
@@ -50,13 +57,13 @@ receipt that parses and has every required key. No model is involved.
 
 Two scripts, and they do different things.
 
-**`register_code_evaluator.py`** uploads `grade_sparkles.py` to your Foundry
+**'register_code_evaluator.py'** uploads 'grade_sparkles.py' to your Foundry
 project and gives it a name. Registering is not running: it tells the project
 "here is an evaluator you can use", so it shows up in the portal and can be
 pointed at any dataset later. You do this once.
 
-**`run_cloud_eval.py code`** starts an evaluation. It reads
-`sample_runs.jsonl`, hands the rows and the evaluator name to the project, and
+**'run_cloud_eval.py code'** starts an evaluation. It reads
+'sample_runs.jsonl', hands the rows and the evaluator name to the project, and
 waits while Foundry scores every row. The work happens in the cloud, not on
 your machine, which is why the result is a report URL rather than terminal
 output.
@@ -70,7 +77,7 @@ The run prints a report URL. Open it in the portal.
 
 ![Code evaluator report](../images/09-eval-code-report.png)
 
-**How the score is worked out.** `grade_sparkles.py` gives each row a number
+**How the score is worked out.** 'grade_sparkles.py' gives each row a number
 from 0 to 1, in two parts:
 
 - **0.6 for the kiosk**, split across the five required test ids. Each one
@@ -79,7 +86,7 @@ from 0 to 1, in two parts:
   required key, and total more than zero.
 
 **The threshold is separate from the score.** It is set to 0.9 in
-`run_cloud_eval.py`, and it decides where pass turns into fail. It changes no
+'run_cloud_eval.py', and it decides where pass turns into fail. It changes no
 scores; it only moves the line. At 0.9 a row has to have every test id *and* a
 valid receipt, which is the same standard the loop in Module 2.1 enforced.
 
@@ -88,8 +95,8 @@ valid receipt, which is the same standard the loop in Module 2.1 enforced.
 | Row | Score | Why | |
 |---|---|---|---|
 | 1 party order | 1.00 | all five elements on the page, receipt parses | pass |
-| 2 chocolate | 0.88 | `order-count` missing, costing 0.12. Receipt fine | **fail** |
-| 3 flavors | 0.48 | `special` missing, and `not an order` will not parse, losing the whole 0.4 | **fail** |
+| 2 chocolate | 0.88 | 'order-count' missing, costing 0.12. Receipt fine | **fail** |
+| 3 flavors | 0.48 | 'special' missing, and 'not an order' will not parse, losing the whole 0.4 | **fail** |
 | 4 refund | 1.00 | nothing structurally wrong | pass |
 
 Two of four, so the report reads 50%.
@@ -117,9 +124,9 @@ the Foundry IQ knowledge base, so it can check policy claims against the
 source. Foundry calls it through a project connection.
 
 Same two scripts as Step A, pointed at the endpoint instead of the Python
-file. **`register_endpoint_evaluator.py`** registers an evaluator that calls
+file. **'register_endpoint_evaluator.py'** registers an evaluator that calls
 your endpoint through the connection, rather than running code in the project.
-**`run_cloud_eval.py endpoint`** scores the same four rows with it, so you can
+**'run_cloud_eval.py endpoint'** scores the same four rows with it, so you can
 compare the two judges on identical data.
 
 Check the endpoint is working before you run anything. This is the single
@@ -130,7 +137,7 @@ curl $(grep EVAL_ENDPOINT_URL ../.env | cut -d'"' -f2 | sed 's|/evaluate|/health
 ```
 
 You want the model name back, for example
-`{"ok":true,"model":"claude-sonnet-5"}`. An empty model means the endpoint
+'{"ok":true,"model":"claude-sonnet-5"}'. An empty model means the endpoint
 cannot reach Claude, and every row will come back as **Error** rather than a
 score. Fix it with the Troubleshooting section in
 [eval-endpoint/README.md](../../eval-endpoint/README.md) before going on.
@@ -214,4 +221,4 @@ Foundry portal, with Claude's written reasoning in the results.
 This morning you built an agent. This afternoon you made it check its own
 work, gave it a searchable toolbox, watched every step in the portal, and
 scored it with evaluations. Autonomy without evaluations is hope. Autonomy with
-evaluations is engineering. Bring your kiosk to Show and Tell.
+evaluations is engineering.

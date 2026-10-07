@@ -5,7 +5,7 @@ import os
 
 from dotenv import load_dotenv
 
-from agent_framework import Agent, MCPStreamableHTTPTool          # 👈 1.2
+from agent_framework import Agent, MCPStreamableHTTPTool  # 👈 1.2
 from agent_framework.foundry import AnthropicFoundryClient
 
 # 1. Load settings from .env
@@ -26,14 +26,14 @@ async def main() -> None:
         base_url=os.environ["FOUNDRY_ENDPOINT"],
     )
 
-    # 3. Connect to the Cupcake Store MCP server                    👈 1.2
+    # 3. Connect to the Cupcake Store MCP server  👈 1.2
     mcp_tool = MCPStreamableHTTPTool(
         name="cupcake-store",
         url=os.environ["CUPCAKE_MCP_URL"],
     )
     await mcp_tool.connect()
 
-    # 4. Persona and welcome banner come from the MCP server        👈 1.2
+    # 4. Persona and welcome banner come from the MCP server  👈 1.2
     instructions = await mcp_tool.get_prompt("agent_instructions")
     banner = await mcp_tool.get_prompt("welcome_banner")
 
@@ -41,16 +41,16 @@ async def main() -> None:
     agent = Agent(
         client=chat_client,
         name="cupcake-agent",
-        instructions=instructions,                                 # 👈 1.2
-        tools=mcp_tool,                                            # 👈 1.2
+        instructions=instructions,  # 👈 1.2
+        tools=mcp_tool,  # 👈 1.2
     )
 
     # 6. A session keeps the conversation history
     session = agent.create_session()
-    print(banner)                                                  # 👈 1.2
+    print(banner)  # 👈 1.2
     print("Type 'exit' to quit.\n")
 
-    # Let Sparkles greet the customer first                        👈 1.2
+    # Let Sparkles greet the customer first  👈 1.2
     response = await agent.run("hello", session=session)
     print(f"\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
 
@@ -63,7 +63,7 @@ async def main() -> None:
         response = await agent.run(user_input, session=session)
         print(f"\n\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
 
-    await mcp_tool.close()                                         # 👈 1.2
+    await mcp_tool.close()  # 👈 1.2
 
 
 if __name__ == "__main__":

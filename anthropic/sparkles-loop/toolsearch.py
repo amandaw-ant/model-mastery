@@ -37,8 +37,9 @@ tools = [{"type": "tool_search_tool_bm25_20251119", "name": "tool_search_tool_bm
 ]
 
 question = sys.argv[1] if len(sys.argv) > 1 else "How many loyalty points does Priya have?"
-r = client().messages.create(model=SMART_MODEL, max_tokens=800, tools=tools,
-                             messages=[{"role": "user", "content": question}])
+r = client().messages.create(model=SMART_MODEL, max_tokens=800,
+                             system="You work at the Sparkles cupcake shop. Answer with the shop's tools.",
+                             tools=tools, messages=[{"role": "user", "content": question}])
 
 print("searched:", [b.input for b in r.content if b.type == "server_tool_use"])
 print("found:   ", [ref.tool_name for b in r.content

@@ -18,12 +18,12 @@ By the end of this lab you will have:
 - Registered evaluators and scored real runs in Foundry, with Claude's written reasoning in the results
 
 **How the lab works.** Everything runs from scripts already in
-'sparkles-loop/' and 'sparkles-evals/'. You read them, run them, and change
+`sparkles-loop/` and `sparkles-evals/`. You read them, run them, and change
 what they do. Each module ends with a checkpoint.
 
 **If you are picking this up fresh**, copy
-'sparkles-agent/snapshots/agent-module-1.4.py' over 'agent.py' and check that
-'.env' is still filled in. Everyone else starts at Module 2.1.
+`sparkles-agent/snapshots/agent-module-1.4.py` over `agent.py` and check that
+`.env` is still filled in. Everyone else starts at Module 2.1.
 
 **Idea that runs through the afternoon:** the agent that writes is not the
 agent that judges. You will meet that idea three times, at three levels of
@@ -33,17 +33,15 @@ polish.
 
 ## Module 2.1: The agent that checks its own work (30 minutes)
 
-**This is the one that matters.** An agent that runs for a minute needs a good
+An agent that runs for a minute needs a good
 prompt. An agent that runs for an hour needs a way to tell whether it is still
-on track, because nobody is watching each step. That is the whole difference
-between a single call and an agent: something has to check the work and decide
+on track, because nobody is watching each step. That is a major difference
+between a short task and a long one: something has to check the work and decide
 whether to go again.
 
-The pattern is always the same shape. Write down what "done" looks like before
-starting. Build. Check the result against that, not against an opinion. Feed
-the failures back and go again, until it passes or you run out of rounds.
-Everything else in this lab — the toolbox, the tracing, the evaluations — hangs
-off this loop.
+The loop has four steps: write down what "done" looks like, build, check the
+result against it, and send back what failed. It repeats until the result
+passes or the rounds run out. The rest of this lab builds on this loop.
 
 ![Three agents, one loop](images/05.0-loop-visual.png)
 
@@ -53,11 +51,9 @@ to that spec. The evaluator checks the result and answers PASS or FAIL with a
 critique. FAIL sends the critique back to the generator and another round
 starts. PASS ends the loop.
 
-The example in the diagram is building the game 2048, and there the evaluator
-opens the finished page in a browser to check that it actually plays. Yours is
-a cupcake kiosk, and the checking is done by a script that reads the page and
-counts what is on it. Same role, different evidence: nothing in the loop is
-specific to what is being built, which is the point of it.
+The checking is done by a script that reads the page and counts what is on it,
+and the evaluator judges that report. Nothing in the loop is specific to what
+is being built, which is the point of it.
 
 Three scripts, three roles, two Claude deployments:
 
@@ -68,26 +64,30 @@ Three scripts, three roles, two Claude deployments:
 - **evaluator.py**: the spec plus hard evidence in, PASS or FAIL out, with a
   critique. Sonnet, because the work is only ever as good as the judge.
 
-Run each on its own first so you see what it produces, then run the loop.
+In this module you will run each one on its own first, so you see what it
+produces, and then run the whole loop.
 
-Start from the 'anthropic' folder. If your terminal is still in
-'sparkles-agent' from Lab 1, run 'cd ..' first.
+Your terminal is in `sparkles-agent` from Lab 1. Go up one folder and into
+`sparkles-loop`:
 
 ```
-cd sparkles-loop
+cd ../sparkles-loop
 ```
+
+That line works in PowerShell and in bash. If you opened a new terminal and
+it is in the `anthropic` folder, use `cd sparkles-loop`.
 
 ### Step A: the planner (5 minutes)
 
-**Open 'planner.py' before you run it.** Its job is to turn a request into a
+**Open `planner.py` before you run it.** Its job is to turn a request into a
 list of things that can be checked without a person looking.
 
-- **'PROMPT'** is the request: a kiosk page with today's flavors, a special,
+- **`PROMPT`** is the request: a kiosk page with today's flavors, a special,
   and a running order count. Clear to a human, but there is nothing in it a
   script could test.
-- **'SPEC_SCHEMA'** makes the answer come back as fixed JSON rather than prose.
-- **'SYSTEM'** tells Claude every acceptance criterion has to name a
-  'data-testid' on the page. Those are the names the evaluator looks for
+- **`SPEC_SCHEMA`** makes the answer come back as fixed JSON rather than prose.
+- **`SYSTEM`** tells Claude every acceptance criterion has to name a
+  `data-testid` on the page. Those are the names the evaluator looks for
   later.
 
 ```
@@ -95,22 +95,22 @@ python planner.py
 ```
 
 Read the spec it prints: three or four features, each with an acceptance
-criterion, saved to 'workspace/spec.json'.
+criterion, saved to `workspace/spec.json`.
 
-Every criterion hangs off a 'data-testid': a label attached to an element so a
-script can find it without caring how the page looks. The spec always covers
-these five:
+Each criterion names a part of the page by its `data-testid`. That is a label
+in the HTML that lets a script find the part, however the page looks. The spec
+always covers these five:
 
-| 'data-testid' | The element | What has to be true |
+| `data-testid` | The element | What has to be true |
 |---|---|---|
-| 'title' | the shop name at the top | it is there |
-| 'flavor-list' | today's flavors | it is there, and holds three flavors, each its own element |
-| 'special' | the special of the day | it is there |
-| 'order-btn' | the Place Order button | it is there |
-| 'order-count' | the running count of orders | it is there |
+| `title` | the shop name at the top | it is there |
+| `flavor-list` | today's flavors | it is there, and holds three flavors, each its own element |
+| `special` | the special of the day | it is there |
+| `order-btn` | the Place Order button | it is there |
+| `order-count` | the running count of orders | it is there |
 
 That list is the contract for the rest of the module. The generator is told to
-use exactly these names, 'checks.py' counts them, and the evaluator passes or
+use exactly these names, `checks.py` counts them, and the evaluator passes or
 fails the page on them. It is also the same list the code evaluator scores in
 Module 2.4.
 
@@ -121,21 +121,21 @@ and returns a single HTML page for the shop counter: today's flavors, the
 special, and a button that places an order. One file, no build step, nothing
 to install.
 
-**Open 'generator.py'.**
+**Open `generator.py`.**
 
-- **'SYSTEM'** is its entire brief: here is the spec, return one
+- **`SYSTEM`** is its entire brief: here is the spec, return one
   self-contained HTML file.
 - It has no memory between sprints and never sees the evaluator's reasoning,
   only the critique text fed back in. That is what stops it grading its own
   work.
-- **'seed()'** loads a first draft instead of generating one.
+- **`seed()`** loads a first draft instead of generating one.
 
-**The seed.** '--seed' loads 'seeds/kiosk_buggy.html', a page we wrote with two
-mistakes in it. Open it in VS Code and find the two 'BUG' comments.
+**The seed.** `--seed` loads `seeds/kiosk_buggy.html`, a page we wrote with two
+mistakes in it. Open it in VS Code and find the two `BUG` comments.
 
 - **Only one flavor is listed.** The spec asks for three.
 - **The order counter is missing.** The JavaScript tries to update an element
-  called 'order-count' that was never added to the page. It checks the element
+  called `order-count` that was never added to the page. It checks the element
   exists first, so nothing breaks; the count just never appears.
 
 In a browser the page looks finished. You would have to check it against the
@@ -149,7 +149,7 @@ first round every time.
 python generator.py --seed
 ```
 
-That copies the page to 'workspace/index.html', which is what everything
+That copies the page to `workspace/index.html`, which is what everything
 downstream reads.
 
 ### Step C: evidence and the evaluator (10 minutes)
@@ -158,10 +158,10 @@ Something has to decide whether the page the generator produced actually meets
 the spec. That happens in two parts: first a script measures the page, then
 Claude decides whether those measurements are good enough.
 
-**Open 'checks.py'.** No Claude here. It is ordinary Python that opens
-'workspace/index.html' and counts what is on the page.
+**Open `checks.py`.** No Claude here. It is ordinary Python that opens
+`workspace/index.html` and counts what is on the page.
 
-- **'evidence()'** reports which 'data-testid' names it found and how many
+- **`evidence()`** reports which `data-testid` names it found and how many
   items are in each list.
 - Run it twice and you get the same answer twice. Ask the generator whether it
   built the page correctly and you get an opinion; this gives you a count.
@@ -174,13 +174,13 @@ The report lists which test ids exist, how many items each list has, and
 whether the page pulls in any external scripts. Compare it with the spec from
 Step A: the flavor list should have three items and it has one.
 
-**Open 'evaluator.py'.** This is Claude again, in a fresh session, and it gets
+**Open `evaluator.py`.** This is Claude again, in a fresh session, and it gets
 two things: the spec, and the report you just ran.
 
 - It never sees the HTML, and never sees what the generator said about its own
   work. A reviewer who reads the author's explanation first tends to agree with
   it.
-- **'VERDICT_SCHEMA'** makes it answer PASS or FAIL with a written critique, in
+- **`VERDICT_SCHEMA`** makes it answer PASS or FAIL with a written critique, in
   a fixed shape the loop can act on.
 
 ```
@@ -193,10 +193,10 @@ gets handed in the next step.
 
 ### Step D: the whole loop (10 minutes)
 
-**Open 'run_loop.py'.** It is short, because the three scripts you just ran
+**Open `run_loop.py`.** It is short, because the three scripts you just ran
 do the work. This one decides what happens next.
 
-- **'MAX_SPRINTS'** stops it after three rounds. Without a limit, a page the
+- **`MAX_SPRINTS`** stops it after three rounds. Without a limit, a page the
   evaluator never accepts would loop forever.
 
 ```
@@ -206,25 +206,24 @@ python run_loop.py
 Sprint 1 loads the seeded draft and fails. Sprint 2 hands the critique to the
 generator, which rewrites the page. The evaluator checks again and passes.
 
-**Now look at what it built.** Open 'workspace/index.html' in a browser.
+**Now look at what it built.** Open `workspace/index.html` in a browser.
 
 ![The finished kiosk page](images/05.1-kiosk.png)
 
 - A flavor list with every flavor on its own row, instead of the single one
-  the seed had. You may see more than three; the spec sets a floor, not a limit
-- The special of the day, called out under it
+  the seed had. You may see more than three; the spec sets a minimum, not a
+  maximum
+- The special of the day, called out on its own
 - The order counter next to the button, showing 0
 - Click **Place Order** and the count goes to 1
 
-Open 'seeds/kiosk_buggy.html' alongside it to see where it started: one flavor,
+Open `seeds/kiosk_buggy.html` alongside it to see where it started: one flavor,
 and no counter at all.
 
-**This is a mock, not a working till.** The button adds one to the number on
-screen and does nothing else. There is no order sent anywhere, nothing saved,
-and no connection to the MCP server or the real shop. What the loop has shown
-is that it can build a page to a spec, catch its own mistake, and fix it
-without anyone checking. A real kiosk would be the next job, and it would be
-built the same way: write the spec first, then let the loop work to it.
+**This page is a demo. It does not take real orders.** The button only adds
+one to the number on screen. What matters is what the loop showed: it built a
+page to a spec, caught its own mistake, and fixed it. A real kiosk would be
+built the same way.
 
 > Why this matters. When an agent writes more code than you can review, the
 > review becomes the bottleneck. The fix is not a better prompt for the
@@ -234,7 +233,7 @@ built the same way: write the spec first, then let the loop work to it.
 **Checkpoint 8.** A planted bug caught by a Claude evaluator and fixed by a
 Claude generator, with no human review.
 
-> Try it: run 'python run_loop.py --fresh' to let the generator build the
+> Try it: run `python run_loop.py --fresh` to let the generator build the
 > first draft itself instead of using the seed.
 
 ---
@@ -249,7 +248,7 @@ changing its shape.
 This morning the agent learned what the shop knows (Foundry IQ). Now it
 learns what the world knows. **Web search** is built into Claude on Foundry.
 
-**Open 'websearch.py' first.** 'QUESTION' is what gets asked, and you can edit
+**Open `websearch.py` first.** `QUESTION` is what gets asked, and you can edit
 it. Claude runs the searches and reads the results on the server side, so your
 script never fetches a web page itself.
 
@@ -271,20 +270,20 @@ python planner.py --research
 
 The research notes print first, then the spec. The flavors and the special
 now come from live results, so your kiosk will not match your neighbor's.
-'python run_loop.py --research' does the same inside the full loop.
+`python run_loop.py --research` does the same inside the full loop.
 
 ### Tool search
 
 Sparkles' tool catalog keeps growing. Loading every tool into every request
 costs context and confuses the model. With **tool search**, tools are marked
-'defer_loading' and Claude searches for the ones it needs:
+`defer_loading` and Claude searches for the ones it needs:
 
-**Open 'toolsearch.py'** and look at **'CATALOG'**: twelve tools, each with a
+**Open `toolsearch.py`** and look at **`CATALOG`**: twelve tools, each with a
 name and a one-line description.
 
 - Sending all twelve with every request uses context and gives the model more
   wrong options to pick from.
-- **'defer_loading'** holds them back. Claude searches the descriptions and
+- **`defer_loading`** holds them back. Claude searches the descriptions and
   loads only the tools the question needs.
 
 ```
@@ -346,12 +345,12 @@ az monitor app-insights component create --app my-appi -g my-rg -l eastus --appl
 az monitor app-insights component show --app my-appi -g my-rg --query connectionString -o tsv
 ```
 
-The connection string is one long line starting 'InstrumentationKey='. That is
+The connection string is one long line starting `InstrumentationKey=`. That is
 the value you need next.
 
 ### Turn tracing on
 
-In '.env', set:
+In `.env`, set:
 
 ```
 ENABLE_OTEL="1"
@@ -359,17 +358,17 @@ APPLICATIONINSIGHTS_CONNECTION_STRING="the connection string you just read"
 ```
 
 That is the only change you make. The scripts already do the rest, in
-'sparkles-loop/common.py' — the shared file all three import for the Claude
+`sparkles-loop/common.py` — the shared file all three import for the Claude
 client, the model names, and the tracing.
 
-- **'setup_tracing()'** runs when the loop starts. It checks those two settings,
+- **`setup_tracing()`** runs when the loop starts. It checks those two settings,
   and if either is missing it prints why and carries on without tracing.
-- **'span'** is a small wrapper the three scripts put around each call to
+- **`span`** is a small wrapper the three scripts put around each call to
   Claude. It starts a timer, records which model ran and how many tokens went
   in and out, and closes when the call returns.
-- Each span is named after the script that opened it: 'planner', 'generator',
-  or 'evaluator'. Those are the names you will look for in the portal.
-- **'session_span()' and 'run_span()'** give the trace its shape: one span
+- Each span is named after the script that opened it: `planner`, `generator`,
+  or `evaluator`. Those are the names you will look for in the portal.
+- **`session_span()` and `run_span()`** give the trace its shape: one span
   around the whole run, and one around each round inside it.
 
 #### Step 1: Run the loop again
@@ -378,18 +377,18 @@ client, the model names, and the tracing.
 python run_loop.py
 ```
 
-The first line of output should be `Tracing on: spans go to Application
-Insights.`
+The first line of output should be
+`Tracing on: spans go to Application Insights.`
 
 The whole run becomes one trace, with the planner first and each round nested
 underneath. The `POST` rows are captured automatically from the HTTP client;
 the rest come from `session_span()`, `run_span()` and `span()` in `common.py`.
+You will open the trace in Step 2. Its spans will be nested like this:
 
 ```
 sparkles-session
   planner          -> POST /anthropic/v1/messages
   sparkles-run (round 1)
-    generator      -> POST /anthropic/v1/messages
     evaluator      -> POST /anthropic/v1/messages
   sparkles-run (round 2)
     generator      -> POST /anthropic/v1/messages
@@ -397,6 +396,7 @@ sparkles-session
 ```
 
 The planner sits outside the rounds because it runs once, before any of them.
+Round 1 has no generator because it starts from the seeded draft.
 
 While the loop runs, take a look at `common.py` and find the `span` class. Note
 the three things it attaches to every agent call: the model, the token counts,
@@ -443,11 +443,6 @@ Questions to answer from this view:
    - In the **Queries hub** dialog, switch off **Always show Queries hub** and
      close it with the X.
    - Switch off the **Agent** toggle at the top right of the page.
-
-   > Optional, before you switch the Agent off: the **Observability Agent**
-   > writes KQL for you. Ask it "show me evaluator spans with their
-   > sparkles.score by round" and compare what it produces with the queries
-   > below.
 2. Paste the following into the editor and select **Run**. It gives the cost
    picture per agent and model.
 
@@ -485,6 +480,11 @@ Questions to answer from this view:
    means the criteria are too easy or the feedback is not reaching the
    generator.
 
+> **Optional.** The **Observability Agent** writes KQL for you. Switch the
+> **Agent** toggle back on, ask it "show me evaluator spans with their
+> sparkles.score by round", and compare what it produces with the queries
+> above.
+
 ![Trace tree and the score chart](images/08-trace-tree-chart.png)
 
 **Checkpoint 10.** Your planner, generator, and evaluator run visible in
@@ -518,23 +518,23 @@ az login
 In a Codespace, use `az login --use-device-code` instead: it prints a code to
 enter at a sign-in page in your own browser.
 
-Check '.env' has 'AZURE_AI_PROJECT_ENDPOINT' and 'EVAL_ENDPOINT_CONNECTION';
+Check `.env` has `AZURE_AI_PROJECT_ENDPOINT` and `EVAL_ENDPOINT_CONNECTION`;
 you set both up in [SETUP.md](SETUP.md) step 5.
 
-Look at 'sample_runs.jsonl'. Four rows, each one a saved Sparkles run with
+Look at `sample_runs.jsonl`. Four rows, each one a saved Sparkles run with
 four fields: what the customer asked, what the agent replied, a static report
 of the kiosk page that run produced, and the receipt it printed.
 
 **The two evaluators read different halves of each row.** The code-based one in
-Step A only sees 'report' and 'receipt'. The Claude judge in Step B only sees
-'query' and 'response'. Neither sees the other's evidence, which is why they
+Step A only sees `report` and `receipt`. The Claude judge in Step B only sees
+`query` and `response`. Neither sees the other's evidence, which is why they
 can disagree about the same run.
 
 | Row | The conversation | The kiosk page | The receipt | Planted problem |
 |---|---|---|---|---|
 | 1 | Party order: 50 cupcakes, over budget, nut allergies, hazelnut. The agent catches the total, the budget, the allergy and the bulk-order rules | all five elements present | valid | nothing: this is what good looks like |
 | 2 | Two chocolate cupcakes. The agent checks stock and flags the tree-nut policy before ordering | **the order counter is missing** | valid | a broken page |
-| 3 | What flavors do you have today? The agent lists flavors, some of which the shop does not sell | **the special of the day is missing**, and the page loads a script from another site | **'not an order'**, so nothing to parse | a broken page and a wrong answer |
+| 3 | What flavors do you have today? The agent lists flavors, some of which the shop does not sell | **the special of the day is missing**, and the page loads a script from another site | **`not an order`**, so nothing to parse | a broken page and a wrong answer |
 | 4 | Cupcakes arrived crushed, can I get a refund? The agent says all sales are final | all five elements present | valid | **the answer is wrong**: the shop's policy gives a refund for damaged orders |
 
 The refund row is the one to keep an eye on. Nothing about the page or the receipt is
@@ -543,7 +543,7 @@ wrong is what the agent told the customer.
 
 ### Step A: a code-based evaluator (10 minutes)
 
-Open 'grade_sparkles.py'. It is a plain Python 'grade()' function: 60 percent of
+Open `grade_sparkles.py`. It is a plain Python `grade()` function: 60 percent of
 the score for required test ids present in the kiosk report, 40 percent for a
 receipt that parses and has every required key. No model is involved.
 
@@ -609,7 +609,7 @@ truth about the refund policy? No static check can answer that. For it you
 need a model that has read the same policy document the agent should have.
 
 In [SETUP.md](SETUP.md) step 5 you deployed a small service (see
-'eval-endpoint/' in the repo). It receives each row, asks the Claude
+`eval-endpoint/` in the repo). It receives each row, asks the Claude
 deployment to grade the response against a rubric, and returns a score and a
 one-sentence reason. The judge is given the same store document that feeds
 the Foundry IQ knowledge base, so it can check policy claims against the
@@ -717,5 +717,5 @@ Foundry portal, with Claude's written reasoning in the results.
 This morning you built an agent. This afternoon you made it check its own
 work, gave it a searchable toolbox, watched every step in the portal, and
 scored it with evaluations. Autonomy without evaluations is hope. Autonomy with
-evaluations is engineering. Bring your kiosk to Show and Tell.
+evaluations is engineering.
 

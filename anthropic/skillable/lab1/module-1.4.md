@@ -40,13 +40,14 @@ times; it never drifts.
 Add a 'receipt' command to 'agent.py'. The agent has to remember its last
 reply, so there are two 'last_reply' assignments: one after the opening
 greeting and one inside the loop. Make the edits marked 👈 1.4 in the box
-below.
+below, or just replace the whole file with everything in the box. Each 👈
+marker is at the end of the line where a change starts.
 
 ```python-notype
 """Sparkles - The Cupcake ordering agent"""
 
 import asyncio
-import json                                                        # 👈 1.4
+import json  # 👈 1.4
 import os
 
 from dotenv import load_dotenv
@@ -54,7 +55,7 @@ from dotenv import load_dotenv
 from agent_framework import Agent, MCPStreamableHTTPTool
 from agent_framework.foundry import AnthropicFoundryClient
 
-from receipt import make_receipt                                   # 👈 1.4
+from receipt import make_receipt  # 👈 1.4
 
 # 1. Load settings from .env
 load_dotenv()
@@ -114,11 +115,11 @@ async def main() -> None:
     # 7. A session keeps the conversation history
     session = agent.create_session()
     print(banner)
-    print("Type 'exit' to quit, or 'receipt' after ordering.\n")   # 👈 1.4
+    print("Type 'exit' to quit, or 'receipt' after ordering.\n")  # 👈 1.4
 
     response = await agent.run("hello", session=session)
     print(f"\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
-    last_reply = reply(response)                                   # 👈 1.4
+    last_reply = reply(response)  # 👈 1.4
 
     while True:
         user_input = input("\033[1;35mYou:\033[0m\n")
@@ -127,14 +128,14 @@ async def main() -> None:
         if not user_input.strip():
             continue
 
-        if user_input.lower() == "receipt":                        # 👈 1.4
+        if user_input.lower() == "receipt":  # 👈 1.4
             receipt = make_receipt(last_reply)
             print("\n\033[1;32mReceipt (schema-valid):\033[0m")
             print(json.dumps(receipt, indent=2), "\n")
             continue
 
         response = await agent.run(user_input, session=session)
-        last_reply = reply(response)                               # 👈 1.4
+        last_reply = reply(response)  # 👈 1.4
         print(f"\n\033[1;35mSparkles:\033[0m\n{reply(response)}\n")
 
     await knowledge_tool.close()
@@ -144,8 +145,6 @@ async def main() -> None:
 if __name__ == "__main__":
     asyncio.run(main())
 ```
-
-You can also just replace the file contents with everything in the box.
 
 Run the agent, place an order, then type 'receipt'.
 

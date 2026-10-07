@@ -5,8 +5,11 @@ model, a conversation session, and tools into one 'Agent' object.
 
 ### Check your settings
 
-Open the '.env' file at the top of the repo in VS Code. It needs three
-values, all from the Playground's **Details** tab:
+Open VS Code from the shortcut on the Desktop. It should open with the
+project loaded into the workspace.
+
+Open the '.env' file at the top of the repo. It needs three values, all from
+the Playground's **Details** tab:
 
 ```
 FOUNDRY_ENDPOINT="https://<your-resource>.services.ai.azure.com/anthropic"
@@ -50,7 +53,9 @@ Then a loop reads what you type, calls 'agent.run(...)', and prints the reply.
 
 ### Run it
 
-In the terminal:
+Open the terminal in VS Code by selecting **Terminal > New Terminal**. It
+should automatically activate the Python virtual environment with all the
+packages installed. Then run:
 
 ```
 cd sparkles-agent
