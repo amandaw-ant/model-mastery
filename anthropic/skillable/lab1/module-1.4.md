@@ -7,14 +7,14 @@ response is guaranteed to match it.
 
 ### The schema
 
-Open 'sparkles-agent/receipt.py'. The schema describes a receipt: order id,
+Open `sparkles-agent/receipt.py`. The schema describes a receipt: order id,
 items (flavor and quantity), total in cents, pickup time. Two things to
 notice:
 
-- The call passes the schema in 'output_config':
-- The answer is not always the first content block. Claude may return a
-  thinking block first, so 'first_text()' picks the first block of type
-  'text' rather than reaching for 'content[0]'.
+- The call passes the schema in `output_config`:
+- The answer isn't always the first content block. Claude may return a
+  thinking block first, so `first_text()` picks the first block of type
+  `text` rather than reaching for `content[0]`.
 
 ```python-notype
 r = client.messages.create(
@@ -37,8 +37,8 @@ times; it never drifts.
 
 ### Wire it into the agent
 
-Add a 'receipt' command to 'agent.py'. The agent has to remember its last
-reply, so there are two 'last_reply' assignments: one after the opening
+Add a `receipt` command to `agent.py`. The agent has to remember its last
+reply, so there are two `last_reply` assignments: one after the opening
 greeting and one inside the loop. Make the edits marked 👈 1.4 in the box
 below.
 
@@ -147,6 +147,6 @@ if __name__ == "__main__":
 
 You can also just replace the file contents with everything in the box.
 
-Run the agent, place an order, then type 'receipt'.
+Run the agent, place an order, then type `receipt`.
 
 **Checkpoint 5.** A schema-valid receipt from a real order, on every run.

@@ -1,4 +1,4 @@
-"""Module 2.2 - Fresh knowledge: web search on Claude in Foundry.
+"""Module 2.1, Step E - Fresh knowledge: web search on Claude in Foundry.
 
 Pinned to web_search_20250305, the version this lab is tested on. A version
 string that does not exist returns HTTP 400 listing the valid ones.

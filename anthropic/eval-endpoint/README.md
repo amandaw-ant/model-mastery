@@ -5,6 +5,9 @@ rather than typing: the image build takes 10 to 15 minutes, and the Container
 Apps environment takes a few more. Start section 2 in its own terminal and
 carry on with something else while it runs.
 
+The commands here are written for bash, so they run as they are on a Mac, on
+Linux, and in a Codespace. On Windows, run them in a Codespace.
+
 ## What this is
 
 A small web service that grades one agent response at a time. You deploy it,
@@ -86,7 +89,7 @@ Apps environment, then create the app pointing at that image.
 
 ```
 RG=my-sparkles-rg            # resource group: any name you like
-REGION=eastus                # any region you can deploy Container Apps in
+REGION=southcentralus        # the region you chose in SETUP.md
 ACR=mysparklesacr01          # registry: globally unique, letters and digits only
 EVAL_SECRET=$(openssl rand -base64 24)
 echo "$EVAL_SECRET"

@@ -1,7 +1,7 @@
 """Planner: one line of intent in, a testable spec out (structured outputs).
 
 Run:  python planner.py
-      python planner.py --research     (Module 2.2: web search first)
+      python planner.py --research     (Module 2.1, Step E: web search first)
 """
 
 import json
@@ -53,7 +53,7 @@ Do not write criteria that require clicking or running the page."""
 
 
 def research(c) -> str:
-    """Module 2.2: ground the spec in what is trending right now."""
+    """Module 2.1, Step E: ground the spec in what is trending right now."""
     banner("PLANNER research: web search")
     with span("planner-research", SMART_MODEL) as s:
         r = c.messages.create(

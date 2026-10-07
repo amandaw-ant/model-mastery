@@ -1,6 +1,6 @@
 ## Module 1.0: Meet your model (10 minutes)
 
-No code in this module. You will find Claude in Foundry, talk to it, and
+No code in this module. You'll find Claude in Foundry, talk to it, and
 change how it behaves with a system prompt.
 
 ### Sign in
@@ -15,8 +15,8 @@ change how it behaves with a system prompt.
 ### Find the Claude deployment
 
 1. In the left navigation choose **Build**, then **Models**.
-2. Open the **Deployments** tab. You will see a Claude Sonnet deployment
-   (the name matches 'FOUNDRY_MODEL_DEPLOYMENT' in your '.env') and a Claude
+2. Open the **Deployments** tab. You'll see a Claude Sonnet deployment
+   (the name matches `FOUNDRY_MODEL_DEPLOYMENT` in your `.env`) and a Claude
    Haiku deployment.
 
 ![Deployments tab](../images/02-deployments.png)
@@ -39,11 +39,11 @@ What should I order?'
 
 One sentence, and you have a shop assistant. No examples, no formatting rules,
 no 'be polite'. In the code you write next, the same field is called
-'instructions'.
+`instructions`.
 
 ### Find the edge
 
-You will get back something like this:
+You'll get back something like this:
 
 ```
 Here are some ideas that are popular with kids her age:
@@ -55,25 +55,25 @@ Here are some ideas that are popular with kids her age:
 
 However, none of these are actual Sparkles flavors! The model invented them.
 
-You told it that it works at a cupcake shop. You did not tell it what the shop
+You told it that it works at a cupcake shop. You didn't tell it what the shop
 sells, so it filled that in.
 
 Now ask: 'What's your refund policy?'
 
-You will get a reasonable-sounding policy, and it is invented too. Nothing you
-told it says what Sparkles actually does. That is the real risk: not that the
+You'll get a reasonable-sounding policy, and it's invented too. Nothing you
+told it says what Sparkles actually does. That's the real risk: not that the
 model refuses, but that it answers confidently and plausibly with something
-that is not your shop's policy.
+that isn't your shop's policy.
 
 Module 1.2 gives it the real menu. Module 1.3 gives it the real policies.
 
 ### Look at the code
 
-Click the **Continue in code** button. This is the same call you will make from Python in the
+Click the **Continue in code** button. This is the same call you'll make from Python in the
 next module. Note the three things it needs: the endpoint, a key, and the
 deployment name.
 
 ![Playground](../images/03-playground.png)
 
-**Checkpoint 1.** You have talked to Claude on Foundry, and seen what it does
-and does not know about your shop.
+**Checkpoint 1.** You've talked to Claude on Foundry, and seen what it does
+and doesn't know about your shop.
