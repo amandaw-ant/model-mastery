@@ -15,15 +15,13 @@ scores four real Sparkles runs.
 
 ```
 cd ../sparkles-evals
-az login
+az login --use-device-code
 ```
 
-'az login' opens a sign-in window, and it can open behind VS Code. If nothing
-seems to happen, make the VS Code window smaller and look for it. Choose
-**Work or school account** and sign in with the same workshop account as in
-Module 1.0. A second window follows, and it can hide behind VS Code too. If
-the terminal then asks you to select a subscription, press Enter to keep the
-default.
+The command prints a code and a web address. Open the address in Edge, enter
+the code, and sign in with the same workshop account as in Module 1.0. Then
+come back to the terminal. If it asks you to select a subscription, press
+Enter to keep the default.
 
 Check '.env' has 'AZURE_AI_PROJECT_ENDPOINT' and 'EVAL_ENDPOINT_CONNECTION'
 (your instructor pre-created that connection). Each attendee's evaluators are
