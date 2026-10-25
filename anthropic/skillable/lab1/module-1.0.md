@@ -1,7 +1,8 @@
 ## Module 1.0: Meet your model (10 minutes)
 
-No code in this module. You will find Claude in Foundry, talk to it, and
-change how it behaves with a system prompt.
+We'll start in the Foundry Playground, without code. You'll give Claude a role
+with a system prompt, then see what it can't answer without your shop's real
+information. The rest of this lab works to add information to our agent.
 
 ### Sign in
 1. Sign in to the virtual machine with the following credentials:
@@ -16,7 +17,7 @@ change how it behaves with a system prompt.
 	**Access Pass**: `@lab.CloudPortalCredential(User1).AccessToken`
    
 	>[!note]The sign-in details are also on the Resources tab.
-4. If the top bar has a **New Foundry** toggle, make sure it is turned on.
+4. If the top bar has a **New Foundry** toggle, make sure it's turned on.
 5. From the project listings on the main page, select the pre-created
    project. There should only be one.
 6. If a dialog pops up, select the close or **Skip** button.
@@ -26,7 +27,7 @@ change how it behaves with a system prompt.
 ### Find the Claude deployment
 
 1. In the left navigation choose **Build**, then **Models**.
-2. Open the **Deployments** tab. You will see a Claude Sonnet deployment
+2. Open the **Deployments** tab. You'll see a Claude Sonnet deployment
    (the name matches 'FOUNDRY_MODEL_DEPLOYMENT' in your '.env') and a Claude
    Haiku deployment. Those are the two this lab uses. Your project may list
    other Claude models as well.
@@ -46,7 +47,7 @@ Click the Sonnet deployment, then **Open in playground**. Find the
 You are the order assistant for Sparkles Cupcakes, a small cupcake shop.
 ```
 
-Then, in the chat box, ask: 'It is my daughter's birthday and she is eight.
+Then, in the chat box, ask: 'It's my kid's birthday and they're eight.
 What should I order?'
 
 One sentence, and you have a shop assistant. No examples, no formatting rules,
@@ -55,37 +56,32 @@ no 'be polite'. In the code you write next, the same field is called
 
 ### Find the edge
 
-You will get back something like this:
+Read the reply. You'll probably get general ideas, like vanilla or chocolate
+with bright frosting, or some questions about the party. Notice what's missing:
+it can't tell you what Sparkles actually sells.
 
-```
-Here are some ideas that are popular with kids her age:
-  Vanilla with pink frosting, Chocolate with rainbow sprinkles, Funfetti
-  Rainbow cupcakes - colorful inside, very magical!
-  Unicorn cupcakes - super popular with 8-year-olds
-  Strawberry with whipped frosting
-```
-
-However, none of these are actual Sparkles flavors! The model invented them.
-
-You told it that it works at a cupcake shop. You did not tell it what the shop
-sells, so it filled that in.
+You told it that it works at a cupcake shop. You didn't tell it what the shop
+sells.
 
 Now ask: 'What's your refund policy?'
 
-You will get a reasonable-sounding policy, and it is invented too. Nothing you
-told it says what Sparkles actually does. That is the real risk: not that the
-model refuses, but that it answers confidently and plausibly with something
-that is not your shop's policy.
+It will most likely tell you it doesn't have that information, and suggest you
+check with the shop. That's the behavior you want: it doesn't make up a policy.
+But it's not much use to your customer yet, and your assistant can't do its job
+with what it knows so far.
+
+Models don't all behave the same way here, so check how yours handles questions
+it can't answer. Never assume an answer is grounded unless you gave it the facts.
 
 Module 1.2 gives it the real menu. Module 1.3 gives it the real policies.
 
 ### Look at the code
 
-Click the **Continue in code** button. This is the same call you will make from Python in the
+Click the **Continue in code** button. This is the same call you'll make from Python in the
 next module. Note the three things it needs: the endpoint, a key, and the
 deployment name.
 
 ![Playground](../images/03-playground.png)
 
-**Checkpoint 1.** You have talked to Claude on Foundry, and seen what it does
-and does not know about your shop.
+✅ **Checkpoint 1.** You have talked to Claude on Foundry, and seen what it does
+and doesn't know about your shop.
